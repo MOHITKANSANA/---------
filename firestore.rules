@@ -1,0 +1,131 @@
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check for admin role
+    function isAdmin() {
+      // Super admin has permanent access. Check for email in a case-insensitive manner.
+      return request.auth.token.email.lower() == 'qukly@study.com' || exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+    
+    function isBookManager() {
+      return isAdmin() || exists(/databases/$(database)/documents/roles_book_manager/$(request.auth.uid));
+    }
+
+    // Default allow writes for admins, reads for authenticated users.
+    match /{document=**} {
+      allow read, list: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    // Public collections readable by anyone
+    match /courses/{courseId} {
+      allow read, list: if true;
+    }
+    match /ebooks/{ebookId} {
+      allow read, list: if true;
+    }
+    match /pyqs/{pyqId} {
+      allow read, list: if true;
+    }
+    match /tests/{testId} {
+      allow read, list: if true;
+    }
+     match /educators/{educatorId} {
+      allow read, list: if true;
+    }
+    match /books/{bookId} {
+      allow read, list: if true;
+    }
+    match /posts/{postId} {
+      allow read, list: if request.auth != null;
+      allow create: if request.auth.uid == request.resource.data.userId || isAdmin();
+      allow update, delete: if request.auth.uid == resource.data.userId || isAdmin();
+    }
+    
+    // Comments can be read by anyone, but only created/deleted by the owner.
+    match /posts/{postId}/comments/{commentId} {
+      allow read, list: if request.auth != null;
+      allow create: if request.auth.uid == request.resource.data.userId;
+      allow delete: if request.auth.uid == resource.data.userId;
+    }
+
+    // Likes can be created/deleted by the owner. Read access is not needed for querying existence.
+    match /posts/{postId}/likes/{likeId} {
+      allow create: if request.auth.uid == request.resource.data.userId;
+      allow delete: if request.auth.uid == resource.data.userId;
+    }
+
+    // User profiles are public to read, but only owner can write.
+    // Admins can write to add/remove fcmToken.
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if request.auth.uid == userId || isAdmin();
+    }
+    
+    // User-specific sub-collections remain private
+    match /users/{userId}/{path=**} {
+      allow read, write: if request.auth.uid == userId;
+    }
+    
+    // Enrollments can be created by any authenticated user, but only read by the user themselves or an admin
+    match /enrollments/{enrollmentId} {
+      allow create: if request.auth != null;
+      allow read: if request.auth.uid == resource.data.userId || isAdmin();
+      allow update, delete: if isAdmin();
+    }
+    
+    // Book orders:
+    // - Users can create their own order.
+    // - Users can read their own order document.
+    // - Users CANNOT list all orders.
+    // - Admins or Book Managers can list, update, and delete all orders.
+    match /bookOrders/{orderId} {
+        allow create: if request.auth.uid == request.resource.data.userId;
+        allow read: if request.auth.uid == resource.data.userId || isBookManager();
+        allow list, update, delete: if isBookManager();
+    }
+
+    // Chat messages can be read and written by any authenticated user
+    match /chats/{chatId}/{message=**} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Doubts can be created by any authenticated user
+    match /doubts/{doubtId} {
+      allow create: if request.auth != null;
+    }
+    
+    // Referral data can be created by any user, points can be read by anyone
+    match /referrals/{referralId} {
+        allow create: if request.auth != null;
+    }
+    match /referralPoints/{userId} {
+        allow read: if true;
+        allow write: if request.auth.uid == userId || isAdmin();
+    }
+
+    // Settings can be read by anyone, but only written by logged-in users.
+    // The UI itself should perform the authorization check for sensitive operations.
+    match /settings/{settingId} {
+        allow read: if true;
+        allow write: if request.auth != null;
+    }
+    
+    // Coupons can be read by any authenticated user, but only written by admins
+    match /coupons/{couponId} {
+      allow read: if request.auth != null;
+      allow list, create, update, delete: if isAdmin();
+    }
+
+    // Admin roles can only be managed by other admins
+    match /roles_admin/{userId} {
+        allow read, write: if isAdmin();
+    }
+    // Book manager role can only be managed by admins
+    match /roles_book_manager/{userId} {
+        allow read, write: if isAdmin();
+    }
+  }
+}
