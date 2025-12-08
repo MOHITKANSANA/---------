@@ -2,26 +2,25 @@
 import { MetadataRoute } from 'next'
 import admin from 'firebase-admin';
 
-// Initialize Firebase Admin SDK if not already initialized
 // This setup is safe for server-side execution.
+// It checks for the environment variable and handles its absence gracefully.
 if (!admin.apps.length) {
   try {
     const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT;
     if (!serviceAccountString) {
-      throw new Error("Firebase Admin SDK service account is not set in environment variables (FIREBASE_SERVICE_ACCOUNT).");
+      console.warn("Sitemap Generation: FIREBASE_SERVICE_ACCOUNT env var not set. Skipping dynamic routes.");
+    } else {
+      const serviceAccount = JSON.parse(serviceAccountString);
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
     }
-    const serviceAccount = JSON.parse(serviceAccountString);
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-    });
   } catch (error: any) {
-    console.error("Firebase Admin SDK for sitemap failed:", error.message);
-    // In a production environment, you might want to handle this more gracefully.
-    // For now, we log the error. The sitemap will be generated with static routes only.
+    console.error("Sitemap Generation: Firebase Admin SDK init failed:", error.message);
   }
 }
 
-const db = admin.firestore();
+const db = admin.apps.length ? admin.firestore() : null;
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://quklystudy.com'; // Fallback URL
 
@@ -36,9 +35,9 @@ async function generateDynamicSitemaps(): Promise<SitemapEntry[]> {
     const sitemapEntries: SitemapEntry[] = [];
     const today = new Date().toISOString().split('T')[0];
 
-    // Check if the admin app was initialized successfully before proceeding
-    if (!admin.apps.length) {
-        console.warn("Admin SDK not initialized, skipping dynamic sitemap generation.");
+    // Check if the db was initialized successfully before proceeding
+    if (!db) {
+        console.warn("Sitemap: Firestore not available, skipping dynamic sitemap generation.");
         return [];
     }
 

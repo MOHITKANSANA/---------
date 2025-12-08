@@ -6,21 +6,38 @@ if (!admin.apps.length) {
   try {
     const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT;
     if (!serviceAccountString) {
-      throw new Error("Firebase Admin SDK service account is not set in environment variables (FIREBASE_SERVICE_ACCOUNT).");
+      console.warn("Firebase Admin SDK: FIREBASE_SERVICE_ACCOUNT env var not set. Admin features may not work.");
+    } else {
+      const serviceAccount = JSON.parse(serviceAccountString);
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
     }
-    
-    const serviceAccount = JSON.parse(serviceAccountString);
-
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-    });
   } catch (error: any) {
      console.error("Firebase Admin SDK initialization failed:", error.message);
-     // We throw an error here to make it clear that the admin features will not work.
-     // This helps in debugging issues related to environment variables or malformed JSON.
-     throw new Error(`Firebase Admin SDK initialization failed: ${error.message}`);
   }
 }
 
-export const adminDB = admin.firestore();
-export const adminMessaging = admin.messaging();
+// Export a function to get the DB instance to ensure it's accessed only when available.
+const getAdminDB = () => {
+    if (!admin.apps.length) {
+        // This is a fallback to prevent crashing if initialization failed.
+        // It returns a mock or limited functionality object.
+        // In a real app, you might throw an error or handle it differently.
+        console.error("Firebase Admin is not initialized. Firestore operations will fail.");
+        return null;
+    }
+    return admin.firestore();
+};
+
+
+const getAdminMessaging = () => {
+    if (!admin.apps.length) {
+        console.error("Firebase Admin is not initialized. Messaging operations will fail.");
+        return null;
+    }
+    return admin.messaging();
+};
+
+export const adminDB = getAdminDB()!;
+export const adminMessaging = getAdminMessaging()!;
