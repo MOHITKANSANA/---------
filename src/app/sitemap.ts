@@ -3,6 +3,7 @@ import { MetadataRoute } from 'next'
 import admin from 'firebase-admin';
 
 // Initialize Firebase Admin SDK if not already initialized
+// This setup is safe for server-side execution.
 if (!admin.apps.length) {
   try {
     const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT;
@@ -15,6 +16,8 @@ if (!admin.apps.length) {
     });
   } catch (error: any) {
     console.error("Firebase Admin SDK for sitemap failed:", error.message);
+    // In a production environment, you might want to handle this more gracefully.
+    // For now, we log the error. The sitemap will be generated with static routes only.
   }
 }
 
@@ -33,6 +36,7 @@ async function generateDynamicSitemaps(): Promise<SitemapEntry[]> {
     const sitemapEntries: SitemapEntry[] = [];
     const today = new Date().toISOString().split('T')[0];
 
+    // Check if the admin app was initialized successfully before proceeding
     if (!admin.apps.length) {
         console.warn("Admin SDK not initialized, skipping dynamic sitemap generation.");
         return [];
@@ -45,8 +49,10 @@ async function generateDynamicSitemaps(): Promise<SitemapEntry[]> {
         try {
             const querySnapshot = await db.collection(collectionName).get();
             querySnapshot.forEach((doc) => {
+                // Special handling for 'books' collection which maps to 'bookshala' route
+                const routePath = collectionName === 'books' ? 'bookshala' : collectionName;
                 sitemapEntries.push({
-                    url: `${APP_URL}/${collectionName}/${doc.id}`,
+                    url: `${APP_URL}/${routePath}/${doc.id}`,
                     lastModified: today,
                     changeFrequency: 'weekly',
                     priority: 0.8,
