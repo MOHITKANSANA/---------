@@ -68,12 +68,6 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
     NEXT_PUBLIC_VAPID_KEY: process.env.NEXT_PUBLIC_VAPID_KEY,
   },
-  publicRuntimeConfig: {
-    YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
-  },
-  serverRuntimeConfig: {
-    YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
-  },
 };
 
 export default withPWA(nextConfig);
