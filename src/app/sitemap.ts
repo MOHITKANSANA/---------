@@ -1,9 +1,26 @@
 
 import { MetadataRoute } from 'next'
-import { collection, getDocs, query } from 'firebase/firestore';
-import { initializeFirebase } from '@/firebase';
+import admin from 'firebase-admin';
 
-const APP_URL = 'https://your-app-url.com'; // Replace with your actual app URL
+// Initialize Firebase Admin SDK if not already initialized
+if (!admin.apps.length) {
+  try {
+    const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT;
+    if (!serviceAccountString) {
+      throw new Error("Firebase Admin SDK service account is not set in environment variables (FIREBASE_SERVICE_ACCOUNT).");
+    }
+    const serviceAccount = JSON.parse(serviceAccountString);
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+  } catch (error: any) {
+    console.error("Firebase Admin SDK for sitemap failed:", error.message);
+  }
+}
+
+const db = admin.firestore();
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://quklystudy.com'; // Fallback URL
 
 type SitemapEntry = {
   url: string;
@@ -12,18 +29,21 @@ type SitemapEntry = {
   priority?: number;
 };
 
-async function generateDynamicSitemaps() {
-    const { firestore } = initializeFirebase();
+async function generateDynamicSitemaps(): Promise<SitemapEntry[]> {
     const sitemapEntries: SitemapEntry[] = [];
     const today = new Date().toISOString().split('T')[0];
+
+    if (!admin.apps.length) {
+        console.warn("Admin SDK not initialized, skipping dynamic sitemap generation.");
+        return [];
+    }
 
     // Collections to fetch for dynamic routes
     const collectionsToFetch = ['courses', 'ebooks', 'pyqs', 'tests', 'books'];
 
     for (const collectionName of collectionsToFetch) {
         try {
-            const q = query(collection(firestore, collectionName));
-            const querySnapshot = await getDocs(q);
+            const querySnapshot = await db.collection(collectionName).get();
             querySnapshot.forEach((doc) => {
                 sitemapEntries.push({
                     url: `${APP_URL}/${collectionName}/${doc.id}`,
@@ -33,7 +53,7 @@ async function generateDynamicSitemaps() {
                 });
             });
         } catch (error) {
-            console.error(`Error fetching ${collectionName}:`, error);
+            console.error(`Error fetching ${collectionName} for sitemap:`, error);
         }
     }
     
