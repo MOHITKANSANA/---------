@@ -11,7 +11,9 @@ const withPWA = createNextPwa({
 
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    allowedDevOrigins: ["https://6000-firebase-qukly-studyt-1765156780712.cluster-htdgsbmflbdmov5xrjithceibm.cloudworkstations.dev"],
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -63,10 +65,6 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       }
     ],
-  },
-  env: {
-    NEXT_PUBLIC_YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
-    NEXT_PUBLIC_VAPID_KEY: process.env.NEXT_PUBLIC_VAPID_KEY,
   },
 };
 
