@@ -8,11 +8,7 @@ const withPWA = createNextPwa({
   disable: process.env.NODE_ENV === 'development',
 });
 
-
 const nextConfig = {
-  experimental: {
-    allowedDevOrigins: ["https://6000-firebase-qukly-studyt-1765156780712.cluster-htdgsbmflbdmov5xrjithceibm.cloudworkstations.dev"],
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
