@@ -169,14 +169,14 @@ export default function SignupPage() {
   return (
     <div className="flex min-h-full flex-col items-center justify-center p-4">
        <div className="text-center mb-8">
-         <h1 className="text-2xl font-semibold tracking-tight">Welcome to QuklyStudy</h1>
+         <h1 className="text-2xl font-semibold tracking-tight">Welcome to Learnx</h1>
          <p className="text-sm text-muted-foreground">The quickest way to study.</p>
        </div>
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>अकाउंट बनाएं</CardTitle>
           <CardDescription>
-            अपनी सीखने की यात्रा शुरू करने के लिए Quickly Study से जुड़ें।
+            अपनी सीखने की यात्रा शुरू करने के लिए Learnx से जुड़ें।
           </CardDescription>
         </CardHeader>
         <CardContent>

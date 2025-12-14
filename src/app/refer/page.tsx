@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -172,13 +173,13 @@ export default function ReferAndEarnPage() {
         }
 
         setIsSharing(true);
-        const messageTemplate = appSettings?.message || 'Check out Quickly Study, the best app for learning! Use my link to join: {link}';
+        const messageTemplate = appSettings?.message || 'Check out Learnx, the best app for learning! Use my link to join: {link}';
         const message = messageTemplate.replace('{link}', referralLink);
         
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: 'Refer a Friend to Quickly Study',
+                    title: 'Refer a Friend to Learnx',
                     text: message,
                 });
             } catch (error: any) {

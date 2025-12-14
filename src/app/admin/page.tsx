@@ -43,9 +43,8 @@ const processChartData = (items: any[] | null, dateKey: 'signUpDate' | 'enrollme
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 const chartConfig = {
     revenue: { label: 'Revenue' },
-    ashok: { label: 'Ashok (Quickly Study Owner)', color: '#0088FE' },
+    owner: { label: 'Learnx (Owner)', color: '#0088FE' },
     management: { label: 'App Management', color: '#00C49F' },
-    mohit: { label: 'Mohit (App Developer)', color: '#FFBB28' },
 };
 
 
@@ -165,9 +164,8 @@ export default function AdminDashboardOverview() {
   ];
   
   const revenueSplit = [
-      { name: 'Ashok (Quickly Study Owner)', value: stats.totalRevenue * 0.80 },
+      { name: 'Learnx (Owner)', value: stats.totalRevenue * 0.85 },
       { name: 'App Management', value: stats.totalRevenue * 0.15 },
-      { name: 'Mohit (App Developer)', value: stats.totalRevenue * 0.05 },
   ];
 
 

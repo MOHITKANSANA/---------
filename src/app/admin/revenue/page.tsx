@@ -189,9 +189,8 @@ export default function AdminRevenuePage() {
 
 
   const revenueSplit = [
-      { name: 'Ashok (Quickly Study Owner)', value: totalRevenue * 0.80, percentage: 80, color: '#0088FE' },
+      { name: 'Learnx (Owner)', value: totalRevenue * 0.85, percentage: 85, color: '#0088FE' },
       { name: 'App Management', value: totalRevenue * 0.15, percentage: 15, color: '#00C49F' },
-      { name: 'Mohit (App Developer)', value: totalRevenue * 0.05, percentage: 5, color: '#FFBB28' },
   ];
   
   const sourceChartData = Object.entries(revenueBreakdown).map(([name, value]) => ({
@@ -210,9 +209,8 @@ export default function AdminRevenuePage() {
 
   const chartConfig = {
       revenue: { label: 'Revenue' },
-      ashok: { label: 'Ashok (Quickly Study Owner)', color: '#0088FE' },
+      owner: { label: 'Learnx (Owner)', color: '#0088FE' },
       management: { label: 'App Management', color: '#00C49F' },
-      mohit: { label: 'Mohit (App Developer)', color: '#FFBB28' },
   };
 
   if (isLoading) {

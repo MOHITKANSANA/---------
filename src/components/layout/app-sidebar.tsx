@@ -121,8 +121,8 @@ export function AppSidebar() {
   const socialLinks = [
     { href: "https://whatsapp.com/channel/0029Vai66i2Jpe8cngwmG11R", label: "WhatsApp", icon: WhatsAppIcon },
     { href: "https://www.instagram.com/ashokraj__62?utm_source=qr", label: "Instagram", icon: Instagram },
-    { href: "https://youtube.com/@quicklystudy01?si=hPvk5WvWvajNXTMS", label: "YouTube", icon: Youtube },
-    { href: "https://t.me/Quicklystudy", label: "Telegram", icon: Send },
+    { href: "https://youtube.com/@learnx?si=hPvk5WvWvajNXTMS", label: "YouTube", icon: Youtube },
+    { href: "https://t.me/learnx", label: "Telegram", icon: Send },
     { href: "https://www.facebook.com/share/1CEwFx3NuX/", label: "Facebook", icon: Facebook },
   ];
 
@@ -134,7 +134,7 @@ export function AppSidebar() {
             <SidebarHeader>
                 <Link href="/" className="flex items-center gap-2" prefetch={false}>
                     <GraduationCap className="h-8 w-8 text-primary" />
-                    <span className="text-xl font-bold whitespace-nowrap">Quickly Study</span>
+                    <span className="text-xl font-bold whitespace-nowrap">Learnx</span>
                 </Link>
             </SidebarHeader>
           </Sidebar>
@@ -146,7 +146,7 @@ export function AppSidebar() {
       <SidebarHeader>
         <Link href="/" className="flex items-center gap-2" prefetch={false}>
           <GraduationCap className="h-8 w-8 text-primary" />
-          <span className="text-xl font-bold whitespace-nowrap">Quickly Study</span>
+          <span className="text-xl font-bold whitespace-nowrap">Learnx</span>
         </Link>
       </SidebarHeader>
       <SidebarContent>
@@ -180,7 +180,7 @@ export function AppSidebar() {
         <Separator className="my-1" />
          <div className="px-4 py-2">
              <p className="text-xs font-semibold text-muted-foreground group-data-[collapsible=icon]:hidden">
-                Follow the 🔥QUICKLY🚀STUDY 📖🎯
+                Follow the 🔥Learnx🚀STUDY 📖🎯
              </p>
          </div>
          <SidebarMenu>

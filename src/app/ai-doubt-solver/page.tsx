@@ -1,3 +1,4 @@
+
 'use client';
 import { useState } from 'react';
 import { useUser } from '@/firebase';
@@ -56,7 +57,7 @@ export default function AiDoubtSolverPage() {
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Wand2 className="text-primary h-6 w-6"/>
-                        Quickly Study Doubt Solver
+                        Learnx Doubt Solver
                     </CardTitle>
                     <CardDescription>
                         Ask any question by typing. Our AI will help you out.

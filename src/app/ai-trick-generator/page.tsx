@@ -46,7 +46,7 @@ export default function AiTrickGeneratorPage() {
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <BrainCircuit className="text-primary h-6 w-6"/>
-                        Quickly Study Trick Generator
+                        Learnx Trick Generator
                     </CardTitle>
                     <CardDescription>
                         Enter any topic to generate a memorable trick or mnemonic.

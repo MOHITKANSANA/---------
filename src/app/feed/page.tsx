@@ -45,11 +45,11 @@ export default function FeedPage() {
     };
     
      const handleShare = async (postText: string) => {
-        const message = `Check out this post from Quickly Study:\n\n"${postText}"`;
+        const message = `Check out this post from Learnx:\n\n"${postText}"`;
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: 'Post from Quickly Study',
+                    title: 'Post from Learnx',
                     text: message,
                 });
             } catch (error: any) {

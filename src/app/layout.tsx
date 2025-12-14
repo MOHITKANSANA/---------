@@ -8,9 +8,9 @@ import { AuthGate } from '@/components/layout/auth-gate';
 import { Suspense } from 'react';
 
 
-const APP_NAME = "Quickly Study";
-const APP_DEFAULT_TITLE = "Quickly Study";
-const APP_TITLE_TEMPLATE = "%s - Quickly Study";
+const APP_NAME = "Learnx";
+const APP_DEFAULT_TITLE = "Learnx";
+const APP_TITLE_TEMPLATE = "%s - Learnx";
 const APP_DESCRIPTION = "The quickest way to study.";
 
 export const metadata: Metadata = {

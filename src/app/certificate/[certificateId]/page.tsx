@@ -82,7 +82,7 @@ export default function CertificatePage() {
                     </p>
                 </div>
                  <div className="mt-8 sm:mt-12 text-center relative z-10">
-                    <p className="text-base sm:text-lg font-bold">Quickly Study</p>
+                    <p className="text-base sm:text-lg font-bold">Learnx</p>
                     <p className="text-xs text-muted-foreground">The Quickest Way to Study</p>
                 </div>
             </div>
