@@ -8,7 +8,13 @@ const withPWA = createNextPwa({
   disable: process.env.NODE_ENV === 'development',
 });
 
+
+/** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    // This is experimental and may be removed in a future version.
+    // allowedDevOrigins: ["https://6000-firebase-qukly-studyt-1765156780712.cluster-htdgsbmflbdmov5xrjithceibm.cloudworkstations.dev"],
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
