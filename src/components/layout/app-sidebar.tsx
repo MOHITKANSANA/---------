@@ -119,11 +119,11 @@ export function AppSidebar() {
   ];
   
   const socialLinks = [
-    { href: "https://whatsapp.com/channel/0029Vai66i2Jpe8cngwmG11R", label: "WhatsApp", icon: WhatsAppIcon },
-    { href: "https://www.instagram.com/ashokraj__62?utm_source=qr", label: "Instagram", icon: Instagram },
+    { href: "https://chat.whatsapp.com/JydohKVpnO8CYjb0YM4sDl?mode=ww", label: "WhatsApp", icon: WhatsAppIcon },
+    { href: "https://www.instagram.com/mohitkansana8949?igsh=ZGdnYW5jN28zdGVr", label: "Instagram", icon: Instagram },
     { href: "https://youtube.com/@learnx?si=hPvk5WvWvajNXTMS", label: "YouTube", icon: Youtube },
     { href: "https://t.me/learnx", label: "Telegram", icon: Send },
-    { href: "https://www.facebook.com/share/1CEwFx3NuX/", label: "Facebook", icon: Facebook },
+    { href: "https://www.facebook.com/share/1DGAHoMVGP/", label: "Facebook", icon: Facebook },
   ];
 
   const profileNavItem = { href: "/profile", label: "प्रोफ़ाइल", icon: User, tooltip: "Profile" };
