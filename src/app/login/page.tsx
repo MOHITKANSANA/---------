@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -17,7 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useFirebase } from '@/firebase';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { Loader, Mail, Lock } from 'lucide-react';
 import Image from 'next/image';
@@ -51,26 +52,15 @@ export default function LoginPage() {
     }
     setIsLoading(true);
     try {
-      // First, try to sign in
       await signInWithEmailAndPassword(auth, data.email, data.password);
       toast({ title: 'लॉगिन सफल', description: 'आप सफलतापूर्वक लॉगिन हो गए हैं।' });
-      // On successful login, AuthGate will handle redirection
     } catch (error) {
-      // If user not found, try to create a new user
-      if (error instanceof FirebaseError && (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential')) {
-        try {
-          await createUserWithEmailAndPassword(auth, data.email, data.password);
-          toast({ title: 'अकाउंट बन गया', description: 'आपका सफलतापूर्वक साइन अप हो गया है! अब अपनी प्रोफ़ाइल पूरी करें।' });
-           // On successful signup, AuthGate will redirect to complete-profile
-        } catch (signupError) {
-          if (signupError instanceof FirebaseError) {
-              toast({ variant: 'destructive', title: 'साइन अप विफल', description: signupError.message });
-          } else {
-              toast({ variant: 'destructive', title: 'साइन अप विफल', description: 'एक अप्रत्याशित त्रुटि हुई।' });
-          }
+      if (error instanceof FirebaseError) {
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+             toast({ variant: 'destructive', title: 'लॉगिन विफल', description: 'गलत ईमेल या पासवर्ड। कृपया पुनः प्रयास करें।' });
+        } else {
+            toast({ variant: 'destructive', title: 'लॉगिन विफल', description: error.message });
         }
-      } else if (error instanceof FirebaseError) {
-        toast({ variant: 'destructive', title: 'लॉगिन विफल', description: error.message });
       } else {
         toast({ variant: 'destructive', title: 'लॉगिन विफल', description: 'एक अप्रत्याशित त्रुटि हुई।' });
       }
@@ -85,8 +75,7 @@ export default function LoginPage() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      toast({ title: 'लॉगिन सफल', description: 'आप सफलतापूर्वक लॉगिन हो गए हैं।'});
-      // On successful login, AuthGate will handle redirection
+      toast({ title: 'लॉगिन सफल', description: 'आप सफलतापूर्वक गूगल से लॉगिन हो गए हैं।'});
     } catch (error) {
        if (error instanceof FirebaseError) {
         toast({ variant: 'destructive', title: 'Google लॉगिन विफल', description: error.message });
@@ -112,7 +101,7 @@ export default function LoginPage() {
                 className="rounded-full border-4 border-white shadow-lg"
             />
             <h1 className="text-4xl font-bold text-[#090e23] mt-4">Teach mania</h1>
-            <p className="text-[#090e23]/80 mb-8">Sign in or create an account</p>
+            <p className="text-[#090e23]/80 mb-8">Sign in to your account</p>
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
@@ -147,28 +136,20 @@ export default function LoginPage() {
                     )}
                     />
                     <Button type="submit" className="w-full h-12 text-base bg-[#090e23] text-white hover:bg-[#090e23]/90" disabled={isLoading || isGoogleLoading}>
-                        {isLoading ? <Loader className="animate-spin" /> : 'LOGIN / SIGNUP'}
+                        {isLoading ? <Loader className="animate-spin" /> : 'LOGIN'}
                     </Button>
                 </form>
             </Form>
 
-            <div className="relative my-6 w-full">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-[#090e23]/50" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-[#f5a623] px-2 text-[#090e23]/80">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-
-            <div className="flex w-full items-center gap-4">
-                 <Button variant="outline" className="w-full h-12 text-base border-[#090e23] text-[#090e23]" onClick={handleGoogleSignIn} disabled={isLoading || isGoogleLoading}>
+            <div className="flex w-full items-center gap-4 mt-4">
+                 <Button variant="outline" className="w-full h-12 text-base border-gray-300 text-[#090e23] bg-white" onClick={handleGoogleSignIn} disabled={isLoading || isGoogleLoading}>
                     {isGoogleLoading ? <Loader className="animate-spin" /> : <>
                         <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 381.5 512 244 512 110.1 512 0 401.9 0 265.9 0 129.9 110.1 20 244 20c68.2 0 125 28.4 168.3 71.2l-67.7 67.7C314.1 133.5 283.6 117 244 117c-73.2 0-132.3 59.8-132.3 132.9 0 73.2 59.1 132.9 132.3 132.9 87.2 0 115.4-65.2 118.8-98.2H244v-79.6h236.6c2.5 13.1 3.4 27.4 3.4 42.8z"></path></svg>
                         Google
                     </>}
+                 </Button>
+                 <Button asChild variant="outline" className="w-full h-12 text-base border-gray-300 text-[#090e23] bg-white">
+                    <Link href="/signup">NEW USER</Link>
                  </Button>
             </div>
             <p className="px-8 text-center text-xs text-[#090e23]/70 mt-6">
