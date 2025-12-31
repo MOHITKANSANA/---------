@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader, Lock } from 'lucide-react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 
-const ADMIN_ACCESS_CODE = 'Learnxal02';
+const ADMIN_ACCESS_CODE = 'Teachmania03';
 
 export default function AdminAuthPage() {
     const router = useRouter();

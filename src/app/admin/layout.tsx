@@ -1,3 +1,4 @@
+
 'use client';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -31,6 +32,8 @@ import {
   FileSearch,
   BrainCircuit,
   Package,
+  Home,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { useUser } from '@/firebase';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -50,6 +53,8 @@ const managementSections = [
     {
         title: "Content",
         items: [
+            { href: '/admin/home-screen', label: 'Home Screen', icon: Home },
+            { href: '/admin/banners', label: 'Banners', icon: ImageIcon },
             { href: '/admin/courses', label: 'Manage Courses', icon: BookOpen },
             { href: '/admin/content', label: 'Manage Content', icon: Palette },
             { href: '/admin/current-affairs', label: 'Current Affairs', icon: Newspaper },
@@ -76,6 +81,13 @@ const managementSections = [
         items: [
              { href: '/admin/book-orders', label: 'Book Orders', icon: Package },
              { href: '/admin/coupons', label: 'Manage Coupons', icon: TicketPercent },
+        ]
+    },
+     {
+        title: "Our Company",
+        items: [
+            { href: '/admin/our-team', label: 'Our Team', icon: Users },
+            { href: '/admin/our-services', label: 'Our Services', icon: Wand2 },
         ]
     },
     {

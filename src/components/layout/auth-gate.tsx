@@ -10,9 +10,9 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from '@/components/layout/app-sidebar';
 
 const PUBLIC_PATHS = ['/login', '/signup'];
-const NO_LAYOUT_PATHS = ['/login', '/signup'];
+const NO_LAYOUT_PATHS = ['/login', '/signup', '/admin-auth'];
 const FULL_SCREEN_PATHS = ['/courses/watch/', '/live-lectures', '/pdf-viewer', '/youtube/', '/certificate/'];
-const PROFILE_COMPLETE_PATH = '/signup';
+const PROFILE_COMPLETE_PATH = '/signup'; // Changed from /complete-profile to /signup
 
 const shouldShowLayout = (pathname: string) => {
     if (NO_LAYOUT_PATHS.includes(pathname)) return false;
@@ -34,7 +34,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     if (isUserLoading) return;
       
     if (!user || !firestore) {
-        setIsProfileComplete(false);
+        setIsProfileComplete(null);
         setIsCheckingProfile(false);
         return;
     }
@@ -64,22 +64,20 @@ export function AuthGate({ children }: { children: ReactNode }) {
     }
 
     const isPublicPath = PUBLIC_PATHS.includes(pathname);
-    const isAdminPath = pathname.startsWith('/admin');
+    const isAdminPath = pathname.startsWith('/admin') || pathname === '/admin-auth';
     const isProfilePath = pathname === PROFILE_COMPLETE_PATH;
 
     if (!user) {
       // Not logged in
-      if (!isPublicPath) {
+      if (!isPublicPath && !isAdminPath) {
         router.push('/login'); // Force to login page
       }
     } else {
       // Logged in
       if (isPublicPath) {
         router.push('/'); // Already logged in, redirect from public paths
-      } else if (!isProfileComplete && !isProfilePath && !isAdminPath) { // Allow access to admin paths even if profile is incomplete
+      } else if (isProfileComplete === false && !isProfilePath && !isAdminPath) { 
         router.push(PROFILE_COMPLETE_PATH); // Profile is not complete, force completion
-      } else if (isProfileComplete && isProfilePath) {
-        router.push('/'); // Profile is complete, redirect from completion page
       }
     }
   }, [user, isUserLoading, isProfileComplete, isCheckingProfile, pathname, router]);
@@ -89,13 +87,13 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const isProfilePath = pathname === PROFILE_COMPLETE_PATH;
 
   if (isLoading) {
-    return null;
+    return <div className="fixed inset-0 bg-background flex items-center justify-center"><Loader className="animate-spin h-8 w-8" /></div>;
   }
 
-  if (!user && !isPublicPath) return null;
-  if (user && isPublicPath) return null;
-  if (user && !isProfileComplete && !isProfilePath && !pathname.startsWith('/admin')) return null;
-  if (user && isProfileComplete && isProfilePath) return null;
+  // Prevent rendering children during redirects
+  if (!user && !isPublicPath && !pathname.startsWith('/admin')) return <div className="fixed inset-0 bg-background flex items-center justify-center"><Loader className="animate-spin h-8 w-8" /></div>;
+  if (user && isPublicPath) return <div className="fixed inset-0 bg-background flex items-center justify-center"><Loader className="animate-spin h-8 w-8" /></div>;
+  if (user && isProfileComplete === false && !isProfilePath && !pathname.startsWith('/admin')) return <div className="fixed inset-0 bg-background flex items-center justify-center"><Loader className="animate-spin h-8 w-8" /></div>;
 
   if (shouldShowLayout(pathname)) {
       return (

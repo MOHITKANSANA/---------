@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, User, BookCopy, Radio, Download, ClipboardList, Share2, LogOut, LucideIcon, GraduationCap, Users, Info } from "lucide-react";
+import { Home, User, BookCopy, Radio, Download, ClipboardList, Share2, LogOut, LucideIcon, GraduationCap, Users, Info, Shield, Wand2 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -29,14 +29,16 @@ type NavItem = {
 
 const navItems: NavItem[] = [
     { href: "/", label: "Home", icon: Home },
-    { href: "/courses", label: "All Courses", icon: GraduationCap },
+    { href: "/profile", label: "Profile", icon: User },
     { href: "/my-library", label: "My Courses", icon: BookCopy },
+    { href: "/live-lectures", label: "Live Classes", icon: Radio },
     { href: "/downloads", label: "Downloads", icon: Download },
-    { href: "/notice-board", label: "Notice Board", icon: ClipboardList },
-    { href: "/our-services", label: "Our Services", icon: Share2 },
+    { href: "/test-series", label: "MCQ", icon: ClipboardList },
+    { href: "/refer", label: "Share App", icon: Share2 },
     { href: "/our-team", label: "Our Team", icon: Users },
+    { href: "/our-services", label: "Our Services", icon: Wand2 },
     { href: "/about-us", label: "About Us", icon: Info },
-    { href: "/privacy-policy", label: "Privacy Policy", icon: ClipboardList },
+    { href: "/privacy-policy", label: "Privacy Policy", icon: Shield },
 ];
 
 export function AppSidebar() {
