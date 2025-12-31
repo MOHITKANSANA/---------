@@ -51,6 +51,8 @@ export default function AdminOurServicesPage() {
         resolver: zodResolver(serviceSchema), 
         defaultValues: { name: '', description: '', iconUrl: '', leftButtonText: 'Other App', rightButtonText: 'Our App', order: 0 } 
     });
+    
+    const iconUrlValue = serviceForm.watch('iconUrl');
 
     const onServiceSubmit = (values: ServiceFormValues) => {
       if (!firestore) return;
@@ -109,7 +111,9 @@ export default function AdminOurServicesPage() {
                         <form onSubmit={serviceForm.handleSubmit(onServiceSubmit)} className="space-y-4">
                             <FormField control={serviceForm.control} name="name" render={({ field }) => (<FormItem><FormLabel>Service Name</FormLabel><FormControl><Input placeholder="e.g., Live Doubt Solving" {...field} /></FormControl><FormMessage /></FormItem>)}/>
                              <FormField control={serviceForm.control} name="description" render={({ field }) => (<FormItem><FormLabel>Description</FormLabel><FormControl><Textarea placeholder="Describe the service" {...field} /></FormControl><FormMessage /></FormItem>)}/>
-                            <FormField control={serviceForm.control} name="iconUrl" render={({ field }) => (<FormItem><FormLabel>Icon URL</FormLabel><FormControl><Input placeholder="https://example.com/icon.png" {...field} /></FormControl><FormMessage /></FormItem>)}/>
+                            <FormField control={serviceForm.control} name="iconUrl" render={({ field }) => (<FormItem><FormLabel>Icon URL</FormLabel><FormControl><Input placeholder="https://example.com/icon.png" {...field} /></FormControl>
+                            {iconUrlValue && <Image src={iconUrlValue} alt="Icon Preview" width={40} height={40} className="mt-2 rounded-md object-cover" />}
+                            <FormMessage /></FormItem>)}/>
                             <div className="grid grid-cols-2 gap-4">
                                 <FormField control={serviceForm.control} name="leftButtonText" render={({ field }) => (<FormItem><FormLabel>Left Button Text</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)}/>
                                 <FormField control={serviceForm.control} name="rightButtonText" render={({ field }) => (<FormItem><FormLabel>Right Button Text</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)}/>

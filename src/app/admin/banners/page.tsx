@@ -44,6 +44,8 @@ export default function AdminBannersPage() {
     const { data: banners, isLoading: bannersLoading } = useCollection(bannersQuery);
 
     const bannerForm = useForm<BannerFormValues>({ resolver: zodResolver(bannerSchema), defaultValues: { imageUrl: '', alt: '', link: '' } });
+    
+    const imageUrlValue = bannerForm.watch('imageUrl');
 
     const onBannerSubmit = (values: BannerFormValues) => {
       if (!firestore) return;
@@ -100,7 +102,9 @@ export default function AdminBannersPage() {
                         <DialogHeader><DialogTitle>Add New Banner</DialogTitle></DialogHeader>
                         <Form {...bannerForm}>
                         <form onSubmit={bannerForm.handleSubmit(onBannerSubmit)} className="space-y-4">
-                            <FormField control={bannerForm.control} name="imageUrl" render={({ field }) => (<FormItem><FormLabel>Image URL</FormLabel><FormControl><Input placeholder="https://example.com/banner.jpg" {...field} /></FormControl><FormMessage /></FormItem>)}/>
+                            <FormField control={bannerForm.control} name="imageUrl" render={({ field }) => (<FormItem><FormLabel>Image URL</FormLabel><FormControl><Input placeholder="https://example.com/banner.jpg" {...field} /></FormControl>
+                            {imageUrlValue && <Image src={imageUrlValue} alt="Banner Preview" width={200} height={100} className="mt-2 rounded-md object-contain mx-auto" />}
+                            <FormMessage /></FormItem>)}/>
                             <FormField control={bannerForm.control} name="alt" render={({ field }) => (<FormItem><FormLabel>Alt Text</FormLabel><FormControl><Input placeholder="Description of the banner" {...field} /></FormControl><FormMessage /></FormItem>)}/>
                             <FormField control={bannerForm.control} name="link" render={({ field }) => (<FormItem><FormLabel>Link URL (Optional)</FormLabel><FormControl><Input placeholder="https://app.com/target-page" {...field} /></FormControl><FormMessage /></FormItem>)}/>
                             <Button type="submit" disabled={isSubmitting} className="w-full">{isSubmitting ? <><Loader className="mr-2 h-4 w-4 animate-spin" /> Adding...</> : 'Add Banner'}</Button>

@@ -29,8 +29,6 @@ import {
   UserCheck,
   Trophy,
   Wand2,
-  FileSearch,
-  BrainCircuit,
   Package,
   Home,
   Image as ImageIcon,
@@ -53,8 +51,9 @@ const managementSections = [
     {
         title: "Content",
         items: [
-            { href: '/admin/home-screen', label: 'Home Screen', icon: Home },
+            { href: '/admin/home-screen', label: 'Home Screen Icons', icon: Home },
             { href: '/admin/banners', label: 'Banners', icon: ImageIcon },
+            { href: '/admin/news', label: 'News Ticker', icon: Newspaper },
             { href: '/admin/courses', label: 'Manage Courses', icon: BookOpen },
             { href: '/admin/content', label: 'Manage Content', icon: Palette },
             { href: '/admin/current-affairs', label: 'Current Affairs', icon: Newspaper },
@@ -80,6 +79,7 @@ const managementSections = [
         title: "E-commerce",
         items: [
              { href: '/admin/book-orders', label: 'Book Orders', icon: Package },
+             { href: '/admin/books', label: 'Manage Books', icon: Book },
              { href: '/admin/coupons', label: 'Manage Coupons', icon: TicketPercent },
         ]
     },
@@ -123,12 +123,9 @@ export default function AdminLayout({
 
   useEffect(() => {
     if (!isUserLoading) {
-      if (user && !isAdminAuthenticated) {
+      if (!isAdminAuthenticated) {
         router.replace('/admin-auth');
-      } else if (!user) {
-        router.replace('/login');
-      }
-      else {
+      } else {
         setIsCheckingAuth(false);
       }
     }
@@ -138,23 +135,14 @@ export default function AdminLayout({
     return <div className="flex h-screen items-center justify-center"><Loader className="animate-spin" /></div>;
   }
   
-  if (!user || !isAdminAuthenticated) {
+  if (!isAdminAuthenticated) {
+     router.replace('/admin-auth');
     return null;
-  }
-
-  const getActiveSubMenu = () => {
-    const currentMainPath = managementSections.find(section => section.items.some(item => pathname.startsWith(item.href) && (item.href !== '/admin' || pathname === '/admin')));
-    if (currentMainPath) return currentMainPath.items;
-
-    const currentCreationPath = creationNavItems.find(item => pathname.startsWith(item.href));
-    if (currentCreationPath) return creationNavItems;
-
-    return managementSections[0].items;
   }
 
   return (
     <div className="flex min-h-screen w-full bg-muted/40">
-        <aside className="hidden w-64 flex-col border-r bg-background sm:flex">
+        <aside className="hidden w-64 flex-col border-r bg-background sm:flex fixed h-full">
             <div className="border-b p-4">
                  <Link href="/" className="flex items-center gap-2 font-semibold">
                     <Image src="https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg" alt="Teach mania Logo" width={32} height={32} />
@@ -180,7 +168,7 @@ export default function AdminLayout({
                 </nav>
             </div>
         </aside>
-        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-72 w-full">
+        <div className="flex flex-col sm:pl-64 w-full">
              <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
                 <h1 className="text-xl font-semibold">एडमिन डैशबोर्ड</h1>
              </header>

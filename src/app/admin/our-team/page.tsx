@@ -49,6 +49,8 @@ export default function AdminOurTeamPage() {
         resolver: zodResolver(teamMemberSchema), 
         defaultValues: { name: '', role: '', imageUrl: '', description: '' } 
     });
+    
+    const imageUrlValue = teamForm.watch('imageUrl');
 
     const onMemberSubmit = (values: TeamMemberFormValues) => {
       if (!firestore) return;
@@ -106,7 +108,9 @@ export default function AdminOurTeamPage() {
                         <form onSubmit={teamForm.handleSubmit(onMemberSubmit)} className="space-y-4">
                             <FormField control={teamForm.control} name="name" render={({ field }) => (<FormItem><FormLabel>Name</FormLabel><FormControl><Input placeholder="e.g., Jane Doe" {...field} /></FormControl><FormMessage /></FormItem>)}/>
                             <FormField control={teamForm.control} name="role" render={({ field }) => (<FormItem><FormLabel>Role / Designation</FormLabel><FormControl><Input placeholder="e.g., Lead Developer" {...field} /></FormControl><FormMessage /></FormItem>)}/>
-                            <FormField control={teamForm.control} name="imageUrl" render={({ field }) => (<FormItem><FormLabel>Image URL</FormLabel><FormControl><Input placeholder="https://example.com/photo.jpg" {...field} /></FormControl><FormMessage /></FormItem>)}/>
+                            <FormField control={teamForm.control} name="imageUrl" render={({ field }) => (<FormItem><FormLabel>Image URL</FormLabel><FormControl><Input placeholder="https://example.com/photo.jpg" {...field} /></FormControl>
+                            {imageUrlValue && <Image src={imageUrlValue} alt="Image Preview" width={100} height={100} className="mt-2 rounded-md object-cover" />}
+                            <FormMessage /></FormItem>)}/>
                             <FormField control={teamForm.control} name="description" render={({ field }) => (<FormItem><FormLabel>Short Bio (Optional)</FormLabel><FormControl><Textarea placeholder="A short bio about the team member" {...field} /></FormControl><FormMessage /></FormItem>)}/>
                             <Button type="submit" disabled={isSubmitting} className="w-full">{isSubmitting ? <><Loader className="mr-2 h-4 w-4 animate-spin" /> Adding...</> : 'Add Member'}</Button>
                         </form>
