@@ -3,7 +3,7 @@
 import { useUser, useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   BookOpen,
   GraduationCap,
@@ -20,6 +20,8 @@ import {
   LifeBuoy,
   BrainCircuit,
   ChevronDown,
+  Book,
+  FileText,
 } from 'lucide-react';
 import Image from 'next/image';
 import { collection, doc, query, orderBy, limit } from 'firebase/firestore';
@@ -62,18 +64,17 @@ export default function HomePage() {
   const { data: toppers, isLoading: toppersLoading } = useCollection(toppersQuery);
 
 
-  const featureCards = useMemo(() => {
-    let cards = [
+  const featureCards = useMemo(() => [
       { title: 'All Courses', href: '/courses', icon: GraduationCap },
-      { title: 'Live Class', href: '/live-lectures', icon: Clapperboard },
-      { title: 'Notes', href: '/ebooks', icon: BookOpen },
-      { title: 'My Paid Courses', href: '/my-library', icon: Library },
-      { title: 'Social Links', href: '/social-links', icon: Users },
-      { title: 'Test', href: '/test-series', icon: ClipboardList },
-      { title: 'Free Videos', href: '/youtube', icon: Youtube },
-    ];
-    return cards;
-  }, []);
+      { title: 'Live Class', href: '/live-lectures', icon: Clapperboard, iconColor: 'text-red-500' },
+      { title: 'Notes', href: '/ebooks', icon: FileText, iconColor: 'text-orange-500' },
+      { title: 'My Paid Courses', href: '/my-library', icon: Book, iconColor: 'text-blue-500' },
+      { title: 'Social Links', href: '/social-links', icon: Users, iconColor: 'text-sky-500' },
+      { title: 'Test', href: '/test-series', icon: ClipboardList, iconColor: 'text-indigo-500' },
+      { title: 'Free Videos', href: '/youtube', icon: Youtube, iconColor: 'text-red-600' },
+      { title: 'Free Test', href: '/test-series?filter=free', icon: ClipboardList, iconColor: 'text-green-500' },
+      { title: 'Free Notes', href: '/ebooks?filter=free', icon: Library, iconColor: 'text-yellow-500' },
+    ], []);
 
   const banners = [
     { id: 'banner-1', imageUrl: 'https://i.imgur.com/IT22J6b.png', alt: 'Navratri Offer' },
@@ -94,7 +95,6 @@ export default function HomePage() {
 
   return (
     <div className="bg-gray-100 dark:bg-gray-900 min-h-screen">
-      {/* Header */}
       <header className="bg-background p-3 flex justify-between items-center shadow-md sticky top-0 z-40">
         <SidebarTrigger />
         <div className="flex-1 flex justify-center">
@@ -108,13 +108,12 @@ export default function HomePage() {
              </Button>
         </div>
         <div className="flex flex-col items-center">
-             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bell-ring"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M4 2C2.8 2.2 2 3.2 2 4.5v8.5c0 1.1.9 2 2 2h3.5"/><path d="M20 2c1.2 0.2 2 1.2 2 2.5v8.5c0 1.1-.9 2-2 2h-3.5"/></svg>
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bell-ring"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M4 2C2.8 2.2 2 3.2 2 4.5v8.5c0 1.1.9 2 2 2h3.5"/><path d="M20 2c1.2 0.2 2 2.5v8.5c0 1.1-.9 2-2 2h-3.5"/></svg>
             <span className="text-xs">Notifications</span>
         </div>
       </header>
 
       <div className="p-4 space-y-6 pb-24 md:pb-8">
-        {/* Banners */}
         <Carousel 
            plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
            opts={{ loop: true }}
@@ -131,20 +130,20 @@ export default function HomePage() {
           </CarouselContent>
         </Carousel>
 
-        {/* Feature Grid */}
         <div className="grid grid-cols-3 gap-3">
           {featureCards.map((card, index) => {
              const Icon = card.icon;
              return (
               <Card key={index} onClick={() => handleCardClick(card.href)} className="flex flex-col items-center justify-center p-3 text-center aspect-square transition-transform hover:scale-105 cursor-pointer">
-                <Icon className="mb-2 h-8 w-8 text-primary" strokeWidth={1.5} />
+                <div className="p-3 bg-muted rounded-full mb-2">
+                   <Icon className={cn("h-6 w-6", card.iconColor)} strokeWidth={1.5} />
+                </div>
                 <span className="font-semibold text-xs md:text-sm leading-tight">{card.title}</span>
               </Card>
             )}
           )}
         </div>
 
-        {/* AI Doubt */}
         {appSettings?.aiDoubtSolverEnabled && (
            <Card className="bg-blue-950 text-white cursor-pointer" onClick={() => router.push('/ai-doubt-solver')}>
                <CardContent className="p-4 flex items-center justify-between">
@@ -156,7 +155,6 @@ export default function HomePage() {
            </Card>
         )}
 
-        {/* Latest Courses */}
         <div>
             <h2 className="text-xl font-bold mb-3">Latest Courses</h2>
             {coursesLoading ? <Loader className="animate-spin" /> : (
@@ -172,7 +170,6 @@ export default function HomePage() {
             )}
         </div>
 
-        {/* Top Teachers */}
         <div>
             <h2 className="text-xl font-bold mb-3">Top Teachers</h2>
              {teachersLoading ? <Loader className="animate-spin" /> : (
@@ -188,7 +185,6 @@ export default function HomePage() {
              )}
         </div>
 
-        {/* Toppers */}
         <div>
             <h2 className="text-xl font-bold mb-3">TARGET BOARD के TOPPERS</h2>
              {toppersLoading ? <Loader className="animate-spin" /> : (
@@ -206,7 +202,6 @@ export default function HomePage() {
 
       </div>
 
-      {/* Footer */}
       <footer className="fixed bottom-0 left-0 right-0 bg-card border-t p-1 flex justify-around md:hidden z-40">
         {footerItems.map(item => {
             const Icon = item.icon;

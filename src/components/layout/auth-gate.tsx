@@ -8,17 +8,15 @@ import { Loader } from 'lucide-react';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from '@/components/layout/app-sidebar';
-import { AppHeader } from '@/components/layout/app-header';
 
 const PUBLIC_PATHS = ['/login', '/signup'];
 const NO_LAYOUT_PATHS = ['/login', '/signup'];
 const FULL_SCREEN_PATHS = ['/courses/watch/', '/live-lectures', '/pdf-viewer', '/youtube/', '/certificate/'];
-const PROFILE_COMPLETE_PATH = '/signup'; // Changed from /complete-profile
+const PROFILE_COMPLETE_PATH = '/signup';
 
 const shouldShowLayout = (pathname: string) => {
     if (NO_LAYOUT_PATHS.includes(pathname)) return false;
     if (pathname.startsWith('/admin')) return false;
-    // Check with startsWith for dynamic paths
     if (FULL_SCREEN_PATHS.some(p => pathname.startsWith(p))) return false;
     return true;
 }
@@ -90,26 +88,21 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const isPublicPath = PUBLIC_PATHS.includes(pathname);
   const isProfilePath = pathname === PROFILE_COMPLETE_PATH;
 
-  // Show a global loader while we determine auth/profile status
   if (isLoading) {
-    // Return null instead of a loader to prevent hydration mismatch during initial server render.
-    // The splash screen or the page content itself will show a loading state if necessary.
     return null;
   }
 
-  // Logic to prevent flash of content during redirection
-  if (!user && !isPublicPath) return null; // Waiting for redirect to /login
-  if (user && isPublicPath) return null; // Waiting for redirect to /
-  if (user && !isProfileComplete && !isProfilePath && !pathname.startsWith('/admin')) return null; // Waiting for redirect to /signup
-  if (user && isProfileComplete && isProfilePath) return null; // Waiting for redirect from /signup
+  if (!user && !isPublicPath) return null;
+  if (user && isPublicPath) return null;
+  if (user && !isProfileComplete && !isProfilePath && !pathname.startsWith('/admin')) return null;
+  if (user && isProfileComplete && isProfilePath) return null;
 
   if (shouldShowLayout(pathname)) {
       return (
           <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-              <AppHeader />
-              <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
+              <main className="flex-1 overflow-auto">
                 {children}
               </main>
             </SidebarInset>
@@ -117,6 +110,5 @@ export function AuthGate({ children }: { children: ReactNode }) {
       )
   }
 
-  // Render children only when all checks pass and no redirection is needed
   return <>{children}</>;
 }
