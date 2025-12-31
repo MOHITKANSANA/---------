@@ -10,7 +10,8 @@ export function TeacherCard({ teacher }: { teacher: any }) {
     const router = useRouter();
 
     const handleClick = () => {
-        router.push(`/educators/${teacher.id}`);
+        // Assuming a route like /team/{memberId}
+        router.push(`/team/${teacher.id}`);
     };
 
     return (
@@ -22,7 +23,7 @@ export function TeacherCard({ teacher }: { teacher: any }) {
                         <h3 className="font-bold">{teacher.name}</h3>
                         <CheckCheck className="h-4 w-4 text-blue-400" />
                     </div>
-                    <p className="text-xs">{teacher.experience}</p>
+                    <p className="text-xs">{teacher.role || teacher.experience}</p>
                 </div>
             </div>
         </Card>

@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, User, BookCopy, Radio, Download, ClipboardList, Share2, LogOut, LucideIcon } from "lucide-react";
+import { Home, User, BookCopy, Radio, Download, ClipboardList, Share2, LogOut, LucideIcon, GraduationCap, Users, Info } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -25,17 +25,18 @@ type NavItem = {
   href: string;
   label: string;
   icon: LucideIcon;
-  iconColor: string;
 };
 
 const navItems: NavItem[] = [
-    { href: "/", label: "Home", icon: Home, iconColor: "text-pink-500" },
-    { href: "/profile", label: "Profile", icon: User, iconColor: "text-orange-500" },
-    { href: "/my-library", label: "My Courses", icon: BookCopy, iconColor: "text-purple-500" },
-    { href: "/live-lectures", label: "Live Classes", icon: Radio, iconColor: "text-blue-500" },
-    { href: "/downloads", label: "Downloads", icon: Download, iconColor: "text-red-500" },
-    { href: "/mcq", label: "MCQ", icon: ClipboardList, iconColor: "text-green-500" },
-    { href: "/share", label: "Share App", icon: Share2, iconColor: "text-purple-500" },
+    { href: "/", label: "Home", icon: Home },
+    { href: "/courses", label: "All Courses", icon: GraduationCap },
+    { href: "/my-library", label: "My Courses", icon: BookCopy },
+    { href: "/downloads", label: "Downloads", icon: Download },
+    { href: "/notice-board", label: "Notice Board", icon: ClipboardList },
+    { href: "/our-services", label: "Our Services", icon: Share2 },
+    { href: "/our-team", label: "Our Team", icon: Users },
+    { href: "/about-us", label: "About Us", icon: Info },
+    { href: "/privacy-policy", label: "Privacy Policy", icon: ClipboardList },
 ];
 
 export function AppSidebar() {
@@ -84,11 +85,11 @@ export function AppSidebar() {
       <SidebarHeader className="p-0 border-0">
          <div className="bg-[#090e23] p-4 flex items-center gap-3">
              <Avatar className="h-14 w-14 border-2 border-white">
-                <AvatarImage src="https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg" alt="user avatar" />
+                <AvatarImage src={user?.photoURL || "https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg"} alt="user avatar" />
                 <AvatarFallback>{getInitials(user?.displayName)}</AvatarFallback>
              </Avatar>
              <div className="text-white">
-                <p className="font-bold text-lg">{user?.displayName || "Teach mania"}</p>
+                <p className="font-bold text-lg">{user?.displayName || "Teach Mania"}</p>
                 <p className="text-sm">(Student)</p>
              </div>
          </div>
@@ -104,7 +105,7 @@ export function AppSidebar() {
                 className="h-11 justify-start data-[active=true]:bg-primary/10 data-[active=true]:text-primary"
               >
                 <Link href={item.href}>
-                  <item.icon className={item.iconColor} />
+                  <item.icon className="h-5 w-5" />
                   <span>{item.label}</span>
                 </Link>
               </SidebarMenuButton>

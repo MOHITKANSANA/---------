@@ -8,9 +8,9 @@ import { AuthGate } from '@/components/layout/auth-gate';
 import { Suspense } from 'react';
 
 
-const APP_NAME = "Teach mania";
-const APP_DEFAULT_TITLE = "Teach mania";
-const APP_TITLE_TEMPLATE = "%s - Teach mania";
+const APP_NAME = "Teach Mania";
+const APP_DEFAULT_TITLE = "Teach Mania";
+const APP_TITLE_TEMPLATE = "%s - Teach Mania";
 const APP_DESCRIPTION = "The quickest way to study.";
 
 export const metadata: Metadata = {
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: 'https://i.supaimg.com/6a3d0ff2-fa61-4db0-a5a0-f2c92136a69b.jpg',
-    apple: 'https://i.supaimg.com/6a3d0ff2-fa61-4db0-a5a0-f2c92136a69b.jpg',
+    icon: 'https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg',
+    apple: 'https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg',
   },
   other: {
     "google-site-verification": "tpxyguMPSOqv1W6Aj42I4lhHQB-Ky5tA2SjqoP66LtI"
@@ -39,7 +39,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#090E23',
+  themeColor: '#FFFFFF',
+  minimumScale: 1,
+  initialScale: 1,
+  width: 'device-width',
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -52,14 +56,14 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
-          forcedTheme="dark"
+          defaultTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <FirebaseClientProvider>
