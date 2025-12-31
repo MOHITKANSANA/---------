@@ -50,28 +50,36 @@ export default function HomePage() {
   const firestore = useFirestore();
   const router = useRouter();
 
+  const settingsRef = useMemoFirebase(() => (firestore ? doc(firestore, 'settings', 'homeScreen') : null), [firestore]);
   const bannersQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'banners'), orderBy('createdAt', 'desc')) : null), [firestore]);
   const coursesQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'courses'), orderBy('createdAt', 'desc'), limit(10)) : null), [firestore]);
   const teamQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'team'), limit(10)) : null), [firestore]);
   const servicesQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'services'), orderBy('order', 'asc')) : null), [firestore]);
 
+  const { data: homeSettings, isLoading: settingsLoading } = useDoc(settingsRef);
   const { data: banners, isLoading: bannersLoading } = useCollection(bannersQuery);
   const { data: courses, isLoading: coursesLoading } = useCollection(coursesQuery);
   const { data: team, isLoading: teamLoading } = useCollection(teamQuery);
   const { data: services, isLoading: servicesLoading } = useCollection(servicesQuery);
 
-
-  const featureCards = useMemo(() => [
-      { title: 'All Courses', href: '/courses', icon: GraduationCap, iconColor: 'text-orange-500' },
-      { title: 'Live Class', href: '/live-lectures', icon: Clapperboard, iconColor: 'text-red-500' },
-      { title: 'Notes', href: '/ebooks', icon: FileText, iconColor: 'text-blue-500' },
-      { title: 'My Paid Courses', href: '/my-library', icon: Book, iconColor: 'text-purple-500' },
-      { title: 'Social Links', href: '/social-links', icon: Users, iconColor: 'text-sky-500' },
-      { title: 'Test', href: '/test-series', icon: ClipboardList, iconColor: 'text-indigo-500' },
-      { title: 'Free Videos', href: '/youtube', icon: Youtube, iconColor: 'text-red-600' },
-      { title: 'Free Test', href: '/test-series?filter=free', icon: ClipboardList, iconColor: 'text-green-500' },
-      { title: 'Free Notes', href: '/ebooks?filter=free', icon: Library, iconColor: 'text-yellow-500' },
+  const featureCardsConfig = useMemo(() => [
+      { id: 'all_courses', title: 'All Courses', href: '/courses', defaultIcon: GraduationCap, iconColor: 'text-orange-500' },
+      { id: 'live_class', title: 'Live Class', href: '/live-lectures', defaultIcon: Clapperboard, iconColor: 'text-red-500' },
+      { id: 'notes', title: 'Notes', href: '/ebooks', defaultIcon: FileText, iconColor: 'text-blue-500' },
+      { id: 'my_paid_courses', title: 'My Paid Courses', href: '/my-library', defaultIcon: Book, iconColor: 'text-purple-500' },
+      { id: 'social_links', title: 'Social Links', href: '/social-links', defaultIcon: Users, iconColor: 'text-sky-500' },
+      { id: 'test', title: 'Test', href: '/test-series', defaultIcon: ClipboardList, iconColor: 'text-indigo-500' },
+      { id: 'free_videos', title: 'Free Videos', href: '/youtube', defaultIcon: Youtube, iconColor: 'text-red-600' },
+      { id: 'free_test', title: 'Free Test', href: '/test-series?filter=free', defaultIcon: ClipboardList, iconColor: 'text-green-500' },
+      { id: 'free_notes', title: 'Free Notes', href: '/ebooks?filter=free', defaultIcon: Library, iconColor: 'text-yellow-500' },
     ], []);
+  
+  const featureCards = useMemo(() => {
+    return featureCardsConfig.map(card => ({
+      ...card,
+      iconUrl: homeSettings?.featureIcons?.[card.id]
+    }));
+  }, [featureCardsConfig, homeSettings]);
 
 
   if (isUserLoading) {
@@ -124,11 +132,15 @@ export default function HomePage() {
 
         <div className="grid grid-cols-3 gap-3">
           {featureCards.map((card, index) => {
-             const Icon = card.icon;
+             const Icon = card.defaultIcon;
              return (
               <Card key={index} onClick={() => handleCardClick(card.href)} className="flex flex-col items-center justify-center p-3 text-center aspect-square transition-transform hover:shadow-md cursor-pointer">
                 <div className={cn("p-3 bg-muted rounded-full mb-2", card.iconColor)}>
-                   <Icon className="h-6 w-6 text-white" strokeWidth={1.5} />
+                  {card.iconUrl ? (
+                    <Image src={card.iconUrl} alt={card.title} width={24} height={24} className="h-6 w-6"/>
+                  ) : (
+                    <Icon className="h-6 w-6 text-white" strokeWidth={1.5} />
+                  )}
                 </div>
                 <span className="font-semibold text-xs md:text-sm leading-tight">{card.title}</span>
               </Card>

@@ -12,7 +12,6 @@ import { AppSidebar } from '@/components/layout/app-sidebar';
 const PUBLIC_PATHS = ['/login', '/signup'];
 const NO_LAYOUT_PATHS = ['/login', '/signup', '/admin-auth'];
 const FULL_SCREEN_PATHS = ['/courses/watch/', '/live-lectures', '/pdf-viewer', '/youtube/', '/certificate/'];
-const PROFILE_COMPLETE_PATH = '/signup'; // Changed from /complete-profile to /signup
 
 const shouldShowLayout = (pathname: string) => {
     if (NO_LAYOUT_PATHS.includes(pathname)) return false;
@@ -64,36 +63,31 @@ export function AuthGate({ children }: { children: ReactNode }) {
     }
 
     const isPublicPath = PUBLIC_PATHS.includes(pathname);
-    const isAdminPath = pathname.startsWith('/admin') || pathname === '/admin-auth';
-    const isProfilePath = pathname === PROFILE_COMPLETE_PATH;
+    const isAdminAuthPath = pathname === '/admin-auth';
 
     if (!user) {
       // Not logged in
-      if (!isPublicPath && !isAdminPath) {
+      if (!isPublicPath && !isAdminAuthPath) {
         router.push('/login'); // Force to login page
       }
     } else {
       // Logged in
       if (isPublicPath) {
         router.push('/'); // Already logged in, redirect from public paths
-      } else if (isProfileComplete === false && !isProfilePath && !isAdminPath) { 
-        router.push(PROFILE_COMPLETE_PATH); // Profile is not complete, force completion
       }
     }
   }, [user, isUserLoading, isProfileComplete, isCheckingProfile, pathname, router]);
 
   const isLoading = isUserLoading || isCheckingProfile;
   const isPublicPath = PUBLIC_PATHS.includes(pathname);
-  const isProfilePath = pathname === PROFILE_COMPLETE_PATH;
 
   if (isLoading) {
     return <div className="fixed inset-0 bg-background flex items-center justify-center"><Loader className="animate-spin h-8 w-8" /></div>;
   }
 
   // Prevent rendering children during redirects
-  if (!user && !isPublicPath && !pathname.startsWith('/admin')) return <div className="fixed inset-0 bg-background flex items-center justify-center"><Loader className="animate-spin h-8 w-8" /></div>;
+  if (!user && !isPublicPath && !pathname.startsWith('/admin-auth')) return <div className="fixed inset-0 bg-background flex items-center justify-center"><Loader className="animate-spin h-8 w-8" /></div>;
   if (user && isPublicPath) return <div className="fixed inset-0 bg-background flex items-center justify-center"><Loader className="animate-spin h-8 w-8" /></div>;
-  if (user && isProfileComplete === false && !isProfilePath && !pathname.startsWith('/admin')) return <div className="fixed inset-0 bg-background flex items-center justify-center"><Loader className="animate-spin h-8 w-8" /></div>;
 
   if (shouldShowLayout(pathname)) {
       return (

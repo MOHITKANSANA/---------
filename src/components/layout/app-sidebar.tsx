@@ -35,10 +35,6 @@ const navItems: NavItem[] = [
     { href: "/downloads", label: "Downloads", icon: Download },
     { href: "/test-series", label: "MCQ", icon: ClipboardList },
     { href: "/refer", label: "Share App", icon: Share2 },
-    { href: "/our-team", label: "Our Team", icon: Users },
-    { href: "/our-services", label: "Our Services", icon: Wand2 },
-    { href: "/about-us", label: "About Us", icon: Info },
-    { href: "/privacy-policy", label: "Privacy Policy", icon: Shield },
 ];
 
 export function AppSidebar() {
@@ -87,7 +83,7 @@ export function AppSidebar() {
       <SidebarHeader className="p-0 border-0">
          <div className="bg-[#090e23] p-4 flex items-center gap-3">
              <Avatar className="h-14 w-14 border-2 border-white">
-                <AvatarImage src={user?.photoURL || "https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg"} alt="user avatar" />
+                <AvatarImage src={"https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg"} alt="user avatar" />
                 <AvatarFallback>{getInitials(user?.displayName)}</AvatarFallback>
              </Avatar>
              <div className="text-white">
