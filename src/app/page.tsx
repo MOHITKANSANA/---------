@@ -6,34 +6,23 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   BookOpen,
-  Gift,
   GraduationCap,
   Library,
   Newspaper,
   Loader,
-  Star,
   Home,
-  Bell,
-  Rss,
+  Download,
+  BookCopy,
   ClipboardList,
   Users,
-  Download,
-  Book as EbookIcon,
-  FileQuestion,
   Youtube,
-  BarChartHorizontal,
   Clapperboard,
-  UserCheck,
   LifeBuoy,
-  MessageCircle,
-  Wand2,
-  Trophy,
   BrainCircuit,
   ChevronDown,
-  BookCopy,
 } from 'lucide-react';
 import Image from 'next/image';
-import { collection, doc } from 'firebase/firestore';
+import { collection, doc, query, orderBy, limit } from 'firebase/firestore';
 import { useEffect, useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
@@ -42,10 +31,11 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
+import { CourseCard } from '@/components/cards/course-card';
+import { TeacherCard } from '@/components/cards/teacher-card';
+import { TopperCard } from '@/components/cards/topper-card';
 
 
 const footerItems = [
@@ -63,6 +53,15 @@ export default function HomePage() {
   const appSettingsRef = useMemoFirebase(() => (firestore ? doc(firestore, 'settings', 'app') : null), [firestore]);
   const { data: appSettings, isLoading: settingsLoading } = useDoc(appSettingsRef);
   
+  const coursesQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'courses'), orderBy('createdAt', 'desc'), limit(10)) : null), [firestore]);
+  const teachersQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'educators'), limit(10)) : null), [firestore]);
+  const toppersQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'toppers'), limit(10)) : null), [firestore]);
+  
+  const { data: courses, isLoading: coursesLoading } = useCollection(coursesQuery);
+  const { data: teachers, isLoading: teachersLoading } = useCollection(teachersQuery);
+  const { data: toppers, isLoading: toppersLoading } = useCollection(toppersQuery);
+
+
   const featureCards = useMemo(() => {
     let cards = [
       { title: 'All Courses', href: '/courses', icon: GraduationCap },
@@ -72,8 +71,6 @@ export default function HomePage() {
       { title: 'Social Links', href: '/social-links', icon: Users },
       { title: 'Test', href: '/test-series', icon: ClipboardList },
       { title: 'Free Videos', href: '/youtube', icon: Youtube },
-      { title: 'Free Test', href: '/test-series?filter=free', icon: EbookIcon },
-      { title: 'Free Notes', href: '/ebooks?filter=free', icon: FileQuestion },
     ];
     return cards;
   }, []);
@@ -111,12 +108,12 @@ export default function HomePage() {
              </Button>
         </div>
         <div className="flex flex-col items-center">
-            <Bell className="h-6 w-6"/>
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bell-ring"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M4 2C2.8 2.2 2 3.2 2 4.5v8.5c0 1.1.9 2 2 2h3.5"/><path d="M20 2c1.2 0.2 2 1.2 2 2.5v8.5c0 1.1-.9 2-2 2h-3.5"/></svg>
             <span className="text-xs">Notifications</span>
         </div>
       </header>
 
-      <div className="p-4 space-y-4 pb-24 md:pb-8">
+      <div className="p-4 space-y-6 pb-24 md:pb-8">
         {/* Banners */}
         <Carousel 
            plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
@@ -146,6 +143,67 @@ export default function HomePage() {
             )}
           )}
         </div>
+
+        {/* AI Doubt */}
+        {appSettings?.aiDoubtSolverEnabled && (
+           <Card className="bg-blue-950 text-white cursor-pointer" onClick={() => router.push('/ai-doubt-solver')}>
+               <CardContent className="p-4 flex items-center justify-between">
+                   <div className="flex items-center gap-3">
+                        <Image src="https://i.imgur.com/JGyx2tF.png" alt="AI Icon" width={32} height={32} />
+                        <span className="text-xl font-bold">Doubt</span>
+                   </div>
+               </CardContent>
+           </Card>
+        )}
+
+        {/* Latest Courses */}
+        <div>
+            <h2 className="text-xl font-bold mb-3">Latest Courses</h2>
+            {coursesLoading ? <Loader className="animate-spin" /> : (
+            <Carousel opts={{ align: "start", loop: true }}>
+                <CarouselContent className="-ml-3">
+                    {courses?.map(course => (
+                        <CarouselItem key={course.id} className="pl-3 basis-4/5 sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+                             <CourseCard course={course} />
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+            </Carousel>
+            )}
+        </div>
+
+        {/* Top Teachers */}
+        <div>
+            <h2 className="text-xl font-bold mb-3">Top Teachers</h2>
+             {teachersLoading ? <Loader className="animate-spin" /> : (
+            <Carousel opts={{ align: "start", loop: true }}>
+                <CarouselContent className="-ml-3">
+                    {teachers?.map(teacher => (
+                        <CarouselItem key={teacher.id} className="pl-3 basis-3/5 sm:basis-2/5 md:basis-1/3">
+                             <TeacherCard teacher={teacher} />
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+            </Carousel>
+             )}
+        </div>
+
+        {/* Toppers */}
+        <div>
+            <h2 className="text-xl font-bold mb-3">TARGET BOARD के TOPPERS</h2>
+             {toppersLoading ? <Loader className="animate-spin" /> : (
+            <Carousel opts={{ align: "start", loop: true }}>
+                <CarouselContent className="-ml-3">
+                    {toppers?.map(topper => (
+                        <CarouselItem key={topper.id} className="pl-3 basis-3/5 sm:basis-2/5 md:basis-1/3">
+                             <TopperCard topper={topper} />
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+            </Carousel>
+            )}
+        </div>
+
       </div>
 
       {/* Footer */}
