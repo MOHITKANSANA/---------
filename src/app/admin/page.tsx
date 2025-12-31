@@ -43,7 +43,7 @@ const processChartData = (items: any[] | null, dateKey: 'signUpDate' | 'enrollme
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 const chartConfig = {
     revenue: { label: 'Revenue' },
-    owner: { label: 'Learnx (Owner)', color: '#0088FE' },
+    owner: { label: 'Teach mania (Owner)', color: '#0088FE' },
     management: { label: 'App Management', color: '#00C49F' },
 };
 
@@ -164,7 +164,7 @@ export default function AdminDashboardOverview() {
   ];
   
   const revenueSplit = [
-      { name: 'Learnx (Owner)', value: stats.totalRevenue * 0.85 },
+      { name: 'Teach mania (Owner)', value: stats.totalRevenue * 0.85 },
       { name: 'App Management', value: stats.totalRevenue * 0.15 },
   ];
 

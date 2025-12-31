@@ -1,30 +1,31 @@
+
 {
   "theme_color": "#090E23",
   "background_color": "#090E23",
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
-  "name": "LearnX",
-  "short_name": "LearnX",
+  "name": "Teach mania",
+  "short_name": "Teach mania",
   "description": "The quickest way to study.",
   "icons": [
     {
-      "src": "https://i.supaimg.com/6a3d0ff2-fa61-4db0-a5a0-f2c92136a69b.jpg",
+      "src": "https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://i.supaimg.com/6a3d0ff2-fa61-4db0-a5a0-f2c92136a69b.jpg",
+      "src": "https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg",
       "sizes": "256x256",
       "type": "image/png"
     },
     {
-      "src": "https://i.supaimg.com/6a3d0ff2-fa61-4db0-a5a0-f2c92136a69b.jpg",
+      "src": "https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg",
       "sizes": "384x384",
       "type": "image/png"
     },
     {
-      "src": "https://i.supaimg.com/6a3d0ff2-fa61-4db0-a5a0-f2c92136a69b.jpg",
+      "src": "https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg",
       "sizes": "512x512",
       "type": "image/png"
     }

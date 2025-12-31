@@ -21,6 +21,7 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "../ui/separator";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -133,8 +134,8 @@ export function AppSidebar() {
           <Sidebar>
             <SidebarHeader>
                 <Link href="/" className="flex items-center gap-2" prefetch={false}>
-                    <GraduationCap className="h-8 w-8 text-primary" />
-                    <span className="text-xl font-bold whitespace-nowrap">Learnx</span>
+                    <Image src="https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg" alt="Teach mania Logo" width={32} height={32} />
+                    <span className="text-xl font-bold whitespace-nowrap">Teach mania</span>
                 </Link>
             </SidebarHeader>
           </Sidebar>
@@ -145,8 +146,8 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <Link href="/" className="flex items-center gap-2" prefetch={false}>
-          <GraduationCap className="h-8 w-8 text-primary" />
-          <span className="text-xl font-bold whitespace-nowrap">Learnx</span>
+           <Image src="https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg" alt="Teach mania Logo" width={32} height={32} />
+          <span className="text-xl font-bold whitespace-nowrap">Teach mania</span>
         </Link>
       </SidebarHeader>
       <SidebarContent>
@@ -180,7 +181,7 @@ export function AppSidebar() {
         <Separator className="my-1" />
          <div className="px-4 py-2">
              <p className="text-xs font-semibold text-muted-foreground group-data-[collapsible=icon]:hidden">
-                Follow the 🔥Learnx🚀STUDY 📖🎯
+                Follow the 🔥Teach mania🚀STUDY 📖🎯
              </p>
          </div>
          <SidebarMenu>

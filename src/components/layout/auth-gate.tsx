@@ -8,7 +8,6 @@ import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import { AppHeader } from '@/components/layout/app-header';
-import { NotificationHandler } from '@/components/notification-handler';
 
 const PUBLIC_PATHS = ['/login', '/signup'];
 const NO_LAYOUT_PATHS = ['/login', '/signup', '/complete-profile'];
@@ -71,7 +70,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     if (!user) {
       // Not logged in
       if (!isPublicPath) {
-        router.push('/signup'); // Force to signup page
+        router.push('/login'); // Force to login page
       }
     } else {
       // Logged in
@@ -107,7 +106,6 @@ export function AuthGate({ children }: { children: ReactNode }) {
           <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-              <NotificationHandler />
               <AppHeader />
               <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
                 {children}

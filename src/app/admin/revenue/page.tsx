@@ -189,7 +189,7 @@ export default function AdminRevenuePage() {
 
 
   const revenueSplit = [
-      { name: 'Learnx (Owner)', value: totalRevenue * 0.85, percentage: 85, color: '#0088FE' },
+      { name: 'Teach mania (Owner)', value: totalRevenue * 0.85, percentage: 85, color: '#0088FE' },
       { name: 'App Management', value: totalRevenue * 0.15, percentage: 15, color: '#00C49F' },
   ];
   
@@ -209,7 +209,7 @@ export default function AdminRevenuePage() {
 
   const chartConfig = {
       revenue: { label: 'Revenue' },
-      owner: { label: 'Learnx (Owner)', color: '#0088FE' },
+      owner: { label: 'Teach mania (Owner)', color: '#0088FE' },
       management: { label: 'App Management', color: '#00C49F' },
   };
 

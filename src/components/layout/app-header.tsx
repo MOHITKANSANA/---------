@@ -22,7 +22,6 @@ import Link from "next/link";
 import { useMemo, useState, useEffect } from 'react';
 import { useFirebase } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import { NotificationDrawer } from '@/components/notification-drawer';
 
 
 // Helper function to get a color based on user ID
@@ -62,7 +61,6 @@ export function AppHeader() {
       <div className="w-full flex-1">
         {/* Future search bar can go here */}
       </div>
-      <NotificationDrawer />
       <UserMenu />
     </header>
   );

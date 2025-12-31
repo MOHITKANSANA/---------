@@ -88,7 +88,7 @@ function PwaInstallCard() {
             <div className="flex items-center gap-3">
                 <Download className="h-8 w-8" />
                 <div>
-                    <h3 className="font-bold">Install Learnx</h3>
+                    <h3 className="font-bold">Install Teach mania</h3>
                     <p className="text-xs">For a better experience.</p>
                 </div>
             </div>
@@ -105,7 +105,7 @@ function AiDoubtSolverCard() {
         <Card className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white animate-gradient-xy p-4 flex flex-col items-center justify-center text-center gap-2">
             <h3 className="text-lg font-bold flex items-center gap-2">
                 <Wand2 />
-                Learnx Doubt Solver
+                Teach mania Doubt Solver
             </h3>
             <Button asChild variant="secondary" className="w-full mt-2" size="sm">
                 <Link href="/ai-doubt-solver">Ask a Doubt</Link>
@@ -170,7 +170,7 @@ export default function HomePage() {
       
       <div className="flex justify-between items-center">
         <div className="text-left">
-            <h1 className="text-2xl font-semibold tracking-tight">Welcome to Learnx</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">Welcome to Teach mania</h1>
             <p className="text-sm text-muted-foreground">The quickest way to study.</p>
         </div>
         <Button asChild className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white">
@@ -184,7 +184,7 @@ export default function HomePage() {
         <CardContent className="p-3 bg-background/80 rounded-md">
           <div className="flex items-center justify-center gap-3">
             <BrainCircuit className="h-6 w-6 text-primary" />
-            <h3 className="text-base font-semibold text-white">Learnx Trick Generator</h3>
+            <h3 className="text-base font-semibold text-white">Teach mania Trick Generator</h3>
           </div>
         </CardContent>
       </Card>

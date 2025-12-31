@@ -8,9 +8,9 @@ import { AuthGate } from '@/components/layout/auth-gate';
 import { Suspense } from 'react';
 
 
-const APP_NAME = "Learnx";
-const APP_DEFAULT_TITLE = "Learnx";
-const APP_TITLE_TEMPLATE = "%s - Learnx";
+const APP_NAME = "Teach mania";
+const APP_DEFAULT_TITLE = "Teach mania";
+const APP_TITLE_TEMPLATE = "%s - Teach mania";
 const APP_DESCRIPTION = "The quickest way to study.";
 
 export const metadata: Metadata = {
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: 'https://i.supaimg.com/6a3d0ff2-fa61-4db0-a5a0-f2c92136a69b.jpg',
-    apple: 'https://i.supaimg.com/6a3d0ff2-fa61-4db0-a5a0-f2c92136a69b.jpg',
+    icon: 'https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg',
+    apple: 'https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg',
   },
   other: {
     "google-site-verification": "tpxyguMPSOqv1W6Aj42I4lhHQB-Ky5tA2SjqoP66LtI"

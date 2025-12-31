@@ -87,7 +87,7 @@ export default function AiBookSummaryPage() {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isLoading} className="w-full">
+            <Button type="submit" disabled={isLoading}>
               {isLoading ? <><Loader className="mr-2 h-4 w-4 animate-spin" /> Generating...</> : <><Wand2 className="mr-2 h-4 w-4" /> Generate Summary</>}
             </Button>
           </form>
@@ -102,7 +102,7 @@ export default function AiBookSummaryPage() {
                 )}
                 {summary && (
                     <Card className="bg-muted">
-                        <CardHeader className="flex-row justify-between items-center">
+                        <CardHeader className="flex-row justify-between items-center py-3">
                             <CardTitle className="text-lg">Generated Summary</CardTitle>
                             <Button variant="ghost" size="icon" onClick={copyToClipboard}>
                                 <Copy className="h-4 w-4"/>
