@@ -1,3 +1,4 @@
+
 'use client';
 import { useUser, useCollection, useFirebase, useMemoFirebase } from '@/firebase';
 import { Button } from '@/components/ui/button';
@@ -93,8 +94,8 @@ export default function HomePage() {
   }
 
   return (
-    <div className="bg-white dark:bg-[#090e23] min-h-screen text-black dark:text-white">
-       <header className="bg-white dark:bg-[#090e23] p-3 flex justify-between items-center sticky top-0 z-40">
+    <div className="bg-[#090e23] min-h-screen text-white">
+       <header className="bg-card/80 backdrop-blur-sm p-3 flex justify-between items-center sticky top-0 z-40">
         <SidebarTrigger />
         <Link href="/">
             <Image src="https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg" alt="Teach Mania Logo" width={40} height={40} className="rounded-full" />
@@ -107,13 +108,6 @@ export default function HomePage() {
       </header>
 
       <div className="p-4 space-y-6 pb-24 md:pb-8">
-        
-        <Card onClick={() => router.push('/ai-trick-generator')} className="cursor-pointer bg-gradient-to-r from-orange-500/10 via-background to-background border-orange-500/50 p-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Wand2 className="h-5 w-5 text-orange-400" />
-              <h3 className="font-semibold text-base">Teach Mania Trick Generator</h3>
-            </div>
-        </Card>
         
         {banners.length > 0 && (
             <Carousel
@@ -130,6 +124,13 @@ export default function HomePage() {
               </CarouselContent>
             </Carousel>
         )}
+        
+        <Card onClick={() => router.push('/ai-trick-generator')} className="cursor-pointer bg-gradient-to-r from-orange-500/10 via-background to-background border-orange-500/50 p-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Wand2 className="h-5 w-5 text-orange-400" />
+              <h3 className="font-semibold text-base">Teach Mania Trick Generator</h3>
+            </div>
+        </Card>
 
 
         <div className="grid grid-cols-3 gap-4">
