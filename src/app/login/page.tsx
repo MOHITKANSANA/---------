@@ -18,7 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useFirebase } from '@/firebase';
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { Loader, Mail, Lock } from 'lucide-react';
 import Image from 'next/image';
@@ -54,15 +54,17 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
       toast({ title: 'लॉगिन सफल', description: 'आप सफलतापूर्वक लॉगिन हो गए हैं।' });
+      router.push('/');
     } catch (error) {
       if (error instanceof FirebaseError) {
-        if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-             toast({ variant: 'destructive', title: 'लॉगिन विफल', description: 'गलत ईमेल या पासवर्ड। कृपया पुनः प्रयास करें।' });
+        if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
+            toast({ variant: 'destructive', title: 'Login Failed', description: 'Account not found. Please create a new account.' });
+            router.push('/signup');
         } else {
-            toast({ variant: 'destructive', title: 'लॉगिन विफल', description: error.message });
+            toast({ variant: 'destructive', title: 'Login Failed', description: error.message });
         }
       } else {
-        toast({ variant: 'destructive', title: 'लॉगिन विफल', description: 'एक अप्रत्याशित त्रुटि हुई।' });
+        toast({ variant: 'destructive', title: 'Login Failed', description: 'An unexpected error occurred.' });
       }
     } finally {
       setIsLoading(false);
@@ -76,6 +78,7 @@ export default function LoginPage() {
     try {
       await signInWithPopup(auth, provider);
       toast({ title: 'लॉगिन सफल', description: 'आप सफलतापूर्वक गूगल से लॉगिन हो गए हैं।'});
+      router.push('/');
     } catch (error) {
        if (error instanceof FirebaseError) {
         toast({ variant: 'destructive', title: 'Google लॉगिन विफल', description: error.message });

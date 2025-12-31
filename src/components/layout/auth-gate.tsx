@@ -11,9 +11,9 @@ import { AppSidebar } from '@/components/layout/app-sidebar';
 import { AppHeader } from '@/components/layout/app-header';
 
 const PUBLIC_PATHS = ['/login', '/signup'];
-const NO_LAYOUT_PATHS = ['/login', '/signup', '/complete-profile'];
+const NO_LAYOUT_PATHS = ['/login', '/signup'];
 const FULL_SCREEN_PATHS = ['/courses/watch/', '/live-lectures', '/pdf-viewer', '/youtube/', '/certificate/'];
-const PROFILE_COMPLETE_PATH = '/complete-profile';
+const PROFILE_COMPLETE_PATH = '/signup'; // Changed from /complete-profile
 
 const shouldShowLayout = (pathname: string) => {
     if (NO_LAYOUT_PATHS.includes(pathname)) return false;
@@ -98,10 +98,10 @@ export function AuthGate({ children }: { children: ReactNode }) {
   }
 
   // Logic to prevent flash of content during redirection
-  if (!user && !isPublicPath) return null; // Waiting for redirect to /signup
+  if (!user && !isPublicPath) return null; // Waiting for redirect to /login
   if (user && isPublicPath) return null; // Waiting for redirect to /
-  if (user && !isProfileComplete && !isProfilePath && !pathname.startsWith('/admin')) return null; // Waiting for redirect to /complete-profile
-  if (user && isProfileComplete && isProfilePath) return null; // Waiting for redirect from /complete-profile
+  if (user && !isProfileComplete && !isProfilePath && !pathname.startsWith('/admin')) return null; // Waiting for redirect to /signup
+  if (user && isProfileComplete && isProfilePath) return null; // Waiting for redirect from /signup
 
   if (shouldShowLayout(pathname)) {
       return (

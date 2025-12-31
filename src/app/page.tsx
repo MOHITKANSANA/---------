@@ -26,7 +26,7 @@ import { collection, doc, query, orderBy, limit } from 'firebase/firestore';
 import { useEffect, useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import {
   Carousel,
   CarouselContent,

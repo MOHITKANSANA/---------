@@ -15,7 +15,6 @@ import { format } from 'date-fns';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { NotificationHandler } from '@/components/notification-handler';
 
 // Helper function to get a color based on user ID
 const getColorForId = (id: string) => {
@@ -58,9 +57,6 @@ export default function ProfilePage() {
   const [userData, setUserData] = useState<any>(null);
   const [referralData, setReferralData] = useState<{ points: number; count: number }>({ points: 0, count: 0 });
   const [isReferralLoading, setIsReferralLoading] = useState(true);
-  
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-  const [wantsNotifications, setWantsNotifications] = useState(false);
 
   const referralsQuery = useMemoFirebase(
       () => user ? query(collection(firestore, 'referrals'), where('referrerId', '==', user.uid)) : null,
@@ -107,9 +103,6 @@ export default function ProfilePage() {
       if (doc.exists()) {
         const data = doc.data();
         setUserData(data);
-        const hasToken = !!data.fcmToken;
-        setNotificationsEnabled(hasToken);
-        setWantsNotifications(hasToken);
       }
     });
 
@@ -118,21 +111,6 @@ export default function ProfilePage() {
         unsubUser();
     };
 }, [user, firestore, isUserLoading]);
-
-  const handleNotificationToggle = async (enabled: boolean) => {
-    setWantsNotifications(enabled);
-    if (!enabled && user && firestore) {
-      try {
-          const userDocRef = doc(firestore, 'users', user.uid);
-          await updateDoc(userDocRef, { fcmToken: null });
-          setNotificationsEnabled(false);
-          toast({ title: 'Notifications Disabled' });
-      } catch (error) {
-          console.error("Error disabling notifications:", error);
-          toast({ variant: 'destructive', title: 'Error', description: 'Could not disable notifications.' });
-      }
-    }
-  }
 
   const getInitials = (name: string | null | undefined) => {
     if (!name) return 'QS';
@@ -182,7 +160,6 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6">
-      {wantsNotifications && <NotificationHandler />}
        <div className="min-w-0">
         <h1 className="text-3xl font-bold truncate">My Profile</h1>
         <p className="text-muted-foreground truncate">View and manage your profile information.</p>
@@ -202,7 +179,7 @@ export default function ProfilePage() {
             </div>
           </div>
           <Button asChild variant="outline" className="w-full sm:w-auto flex-shrink-0">
-            <Link href="/complete-profile">
+            <Link href="/signup">
                 <Pencil className="mr-2 h-4 w-4" />
                 Edit Profile
             </Link>
@@ -216,37 +193,6 @@ export default function ProfilePage() {
             <ProfileInfoItem icon={<MapPin size={18} />} label="State" value={userData?.state} />
             <ProfileInfoItem icon={<BookCopy size={18} />} label="Class/Exam" value={userData?.class} />
           </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-            <CardTitle className="flex items-center"><Bell className="mr-2 h-5 w-5 text-primary"/>Notifications</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-             <div className="flex items-center justify-between">
-                <Label htmlFor="notif-toggle" className="font-medium pr-4">Receive Push Notifications</Label>
-                <Switch
-                    id="notif-toggle"
-                    checked={wantsNotifications}
-                    onCheckedChange={handleNotificationToggle}
-                />
-            </div>
-            {notificationsEnabled && userData?.fcmToken && (
-                <div className="p-3 bg-muted rounded-md text-xs break-all">
-                    <p className="font-bold">Your Notification Token:</p>
-                    <p className="font-mono">{userData.fcmToken}</p>
-                </div>
-            )}
-             {wantsNotifications && !notificationsEnabled && (
-                <div className="p-3 text-destructive-foreground bg-destructive rounded-md text-sm flex items-start gap-2">
-                    <AlertTriangle className="h-5 w-5 mt-0.5 shrink-0" />
-                    <div>
-                        <p className="font-bold">Permission Required</p>
-                        <p>Please allow notification permission in your browser to enable this feature.</p>
-                    </div>
-                </div>
-            )}
         </CardContent>
       </Card>
       

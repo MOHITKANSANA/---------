@@ -1,9 +1,9 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -14,14 +14,24 @@ import {
   FormField,
   FormItem,
   FormMessage,
+  FormLabel,
 } from '@/components/ui/form';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { useFirebase } from '@/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useFirebase, useUser } from '@/firebase';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp, collection, addDoc } from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app';
-import { Loader, Mail, Lock, User, Phone, MapPin, Building } from 'lucide-react';
+import { Loader } from 'lucide-react';
 import Image from 'next/image';
+import { statesOfIndia } from '@/lib/states';
 
 const signupSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -36,7 +46,8 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
   const router = useRouter();
-  const { auth } = useFirebase();
+  const searchParams = useSearchParams();
+  const { auth, firestore } = useFirebase();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -53,28 +64,44 @@ export default function SignupPage() {
   });
 
   const onSubmit = async (data: SignupFormValues) => {
-    if (!auth) {
+    if (!auth || !firestore) {
         toast({ variant: 'destructive', title: 'Authentication Error', description: 'Could not connect to authentication service.' });
         return;
     }
     setIsLoading(true);
     try {
-      // We are creating the user here, but the profile completion will happen on the next page
-      // We pass the form data via state or query params if needed, or just let the user re-enter on complete-profile
-      await createUserWithEmailAndPassword(auth, data.email, data.password);
+      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      const user = userCredential.user;
+
+      // Update Firebase Auth profile
+      await updateProfile(user, { displayName: data.name });
+
+      // Create user document in Firestore
+      const userRef = doc(firestore, 'users', user.uid);
+      await setDoc(userRef, {
+          name: data.name,
+          email: user.email,
+          mobile: data.mobile,
+          state: data.state,
+          city: data.city,
+          profileComplete: true,
+          signUpDate: serverTimestamp(),
+          status: 'active',
+      });
       
-      toast({ title: 'Account Created', description: 'You have been successfully signed up! Now complete your profile.' });
-      
-      // AuthGate will detect the user and the incomplete profile and redirect to /complete-profile
-      // We pass the data to pre-fill the complete-profile page
-      const query = new URLSearchParams({
-        name: data.name,
-        mobile: data.mobile,
-        state: data.state,
-        city: data.city,
-      }).toString();
-      
-      // router.push(`/complete-profile?${query}`);
+      const ref = searchParams.get('ref');
+      if (ref) {
+        const referralsRef = collection(firestore, 'referrals');
+        await addDoc(referralsRef, {
+            referrerId: ref,
+            referredId: user.uid,
+            referredName: data.name,
+            createdAt: serverTimestamp(),
+        });
+      }
+
+      toast({ title: 'Account Created Successfully!', description: 'Welcome to Teach mania.' });
+      router.push('/');
 
     } catch (error) {
        if (error instanceof FirebaseError) {
@@ -94,7 +121,7 @@ export default function SignupPage() {
 
   return (
     <div className="relative min-h-screen w-full bg-[#f5a623] flex flex-col items-center">
-        <header className="w-full bg-blue-600 text-white text-center py-3 text-xl font-semibold shadow-md">
+        <header className="w-full bg-[#090e23] text-white text-center py-3 text-xl font-semibold shadow-md">
             Register
         </header>
 
@@ -118,9 +145,25 @@ export default function SignupPage() {
                     <FormField control={form.control} name="email" render={({ field }) => (
                         <FormItem><FormControl><Input type="email" placeholder="Email" {...field} className="h-12 bg-white text-black" /></FormControl><FormMessage /></FormItem>
                     )}/>
-                    <FormField control={form.control} name="state" render={({ field }) => (
-                        <FormItem><FormControl><Input placeholder="State" {...field} className="h-12 bg-white text-black" /></FormControl><FormMessage /></FormItem>
-                    )}/>
+                    <FormField
+                      control={form.control}
+                      name="state"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger className="h-12 bg-white text-black">
+                                <SelectValue placeholder="Select State" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {statesOfIndia.map(state => <SelectItem key={state} value={state}>{state}</SelectItem>)}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                      <FormField control={form.control} name="city" render={({ field }) => (
                         <FormItem><FormControl><Input placeholder="City" {...field} className="h-12 bg-white text-black" /></FormControl><FormMessage /></FormItem>
                     )}/>
@@ -144,4 +187,3 @@ export default function SignupPage() {
     </div>
   );
 }
-
