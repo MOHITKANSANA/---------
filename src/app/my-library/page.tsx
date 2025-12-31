@@ -146,9 +146,9 @@ export default function MyLibraryPage() {
     return (
         <div className="container mx-auto p-4">
             <div className="mb-8">
-                <h1 className="text-3xl font-bold">मेरी लाइब्रेरी</h1>
+                <h1 className="text-3xl font-bold">My Library</h1>
                 <p className="text-muted-foreground">
-                    आपके द्वारा एनरोल किए गए सभी आइटम्स।
+                    All your enrolled items.
                 </p>
             </div>
             
@@ -165,7 +165,7 @@ export default function MyLibraryPage() {
             {finalLoading && (
                 <div className="flex flex-col items-center justify-center text-center p-12">
                     <Loader className="h-12 w-12 animate-spin mb-4" />
-                    <p>आपकी लाइब्रेरी लोड हो रही है...</p>
+                    <p>Loading your library...</p>
                 </div>
             )}
 
@@ -174,16 +174,16 @@ export default function MyLibraryPage() {
                     <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground p-12">
                         <BookOpen className="h-12 w-12 mb-4" />
                         <h3 className="text-xl font-semibold">
-                            {filter === 'all' ? 'आपकी लाइब्रेरी खाली है' : `No ${filter}s found`}
+                            {filter === 'all' ? 'Your library is empty' : `No ${filter}s found`}
                         </h3>
                         <p>
                             {filter === 'all' 
-                                ? 'आपने अभी तक किसी भी आइटम में एनरोल नहीं किया है।' 
-                                : `आपने अभी तक किसी ${filter} में एनरोल नहीं किया है।`
+                                ? 'You have not enrolled in any items yet.' 
+                                : `You have not enrolled in any ${filter}s yet.`
                             }
                         </p>
                         <Button asChild className="mt-4">
-                            <Link href="/courses">कोर्सेस देखें</Link>
+                            <Link href="/courses">Browse Courses</Link>
                         </Button>
                     </CardContent>
                 </Card>
@@ -213,7 +213,7 @@ export default function MyLibraryPage() {
                             <CardContent className="p-3 pt-0 flex-grow flex flex-col justify-end">
                                 <Button asChild size="sm" className="w-full">
                                     <Link href={getItemLink(item)}>
-                                        {item.type === 'course' ? 'पढ़ाई शुरू करें' : 'देखें'}
+                                        {item.type === 'course' ? 'Start Learning' : 'View'}
                                     </Link>
                                 </Button>
                             </CardContent>

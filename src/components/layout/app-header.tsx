@@ -61,7 +61,6 @@ export function AppHeader() {
       <div className="w-full flex-1">
         {/* Future search bar can go here */}
       </div>
-      <UserMenu />
     </header>
   );
 }

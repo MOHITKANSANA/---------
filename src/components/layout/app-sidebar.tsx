@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, User, Shield, LogOut, LifeBuoy, Youtube, Gift, Instagram, Send, Facebook, BarChartHorizontal, UserCheck } from "lucide-react";
+import { Home, User, BookCopy, Radio, Download, ClipboardList, Share2, LogOut, LucideIcon } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,78 +14,37 @@ import {
   SidebarFooter,
   useSidebar
 } from "@/components/ui/sidebar";
-import { useUser, useAuth, useDoc, useMemoFirebase, useFirestore } from "@/firebase";
+import { useUser, useAuth } from "@/firebase";
 import { useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
-import { doc, onSnapshot } from 'firebase/firestore';
 import { useToast } from "@/hooks/use-toast";
-import { Separator } from "../ui/separator";
-import { useState, useEffect } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 
-const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    {...props}
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-  >
-    <path d="M16.75 13.96c.25.13.43.2.5.33.07.13.07.75-.12 1.38-.19.63-.98 1.2-1.7 1.33-.72.13-1.38.07-1.94-.19-.56-.25-1.38-.5-2.63-1.12-1.25-.63-2.25-1.5-3.06-2.63-.81-1.12-1.25-2.38-1.19-3.56.07-1.19.69-2.19 1.38-2.81.69-.63 1.56-.81 2.31-.81.25 0 .5.06.69.06.31 0 .5.13.69.38.19.25.19.56.13.88-.07.31-.13.5-.25.69-.13.19-.25.31-.38.38-.07.13-.07.19.06.38.13.19.31.44.5.63.19.19.44.44.69.63.25.19.44.31.63.5.19.19.31.31.38.44.07.13.07.25.07.38zm-4.88 5.81c-1.38 0-2.69-.38-3.81-1.06l-4.06 1.06 1.12-3.94c-.75-1.19-1.19-2.63-1.19-4.13 0-4.31 3.5-7.81 7.81-7.81 4.31 0 7.81 3.5 7.81 7.81 0 4.31-3.5 7.81-7.81-7.81z" />
-  </svg>
-);
+type NavItem = {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+  iconColor: string;
+};
 
-
-function GraduationCap(props: React.SVGProps<SVGSVGElement>) {
-    return (
-      <svg
-        {...props}
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-        <path d="M6 12v5c0 1.66 4 3 10 3s10-1.34 10-3v-5" />
-      </svg>
-    )
-  }
+const navItems: NavItem[] = [
+    { href: "/", label: "Home", icon: Home, iconColor: "text-pink-500" },
+    { href: "/profile", label: "Profile", icon: User, iconColor: "text-orange-500" },
+    { href: "/my-library", label: "My Courses", icon: BookCopy, iconColor: "text-purple-500" },
+    { href: "/live-lectures", label: "Live Classes", icon: Radio, iconColor: "text-blue-500" },
+    { href: "/downloads", label: "Downloads", icon: Download, iconColor: "text-red-500" },
+    { href: "/mcq", label: "MCQ", icon: ClipboardList, iconColor: "text-green-500" },
+    { href: "/share", label: "Share App", icon: Share2, iconColor: "text-purple-500" },
+];
 
 export function AppSidebar() {
   const pathname = usePathname();
   const { user, isUserLoading } = useUser();
-  const firestore = useFirestore();
   const auth = useAuth();
   const router = useRouter();
   const { toast } = useToast();
   const { isMobile, setOpenMobile } = useSidebar();
-  const [isAdmin, setIsAdmin] = useState(false);
-  
-  useEffect(() => {
-      if (!user || !firestore) {
-          setIsAdmin(false);
-          return;
-      };
-      
-      if (user.email?.toLowerCase() === 'qukly@study.com') {
-          setIsAdmin(true);
-          return;
-      }
-
-      const adminDocRef = doc(firestore, 'roles_admin', user.uid);
-      const unsubscribe = onSnapshot(adminDocRef, (doc) => {
-          setIsAdmin(doc.exists());
-      });
-      
-      return () => unsubscribe();
-  }, [user, firestore]);
-  
 
   const handleLogout = async () => {
     try {
@@ -110,58 +69,42 @@ export function AppSidebar() {
       setOpenMobile(false);
     }
   };
-
-  const navItems = [
-    { href: "/", label: "होम", icon: Home, tooltip: "Dashboard" },
-    { href: "/courses", label: "कोर्स", icon: BookOpen, tooltip: "Courses" },
-    { href: "/my-progress", label: "My Progress", icon: BarChartHorizontal, tooltip: "My Progress" },
-    { href: "/submit-result", label: "Submit Result", icon: UserCheck, tooltip: "Submit Result" },
-    ...(isAdmin ? [{ href: "/admin", label: "एडमिन पैनल", icon: Shield, tooltip: "Admin Panel" }] : []),
-  ];
   
-  const socialLinks = [
-    { href: "https://chat.whatsapp.com/JydohKVpnO8CYjb0YM4sDl?mode=ww", label: "WhatsApp", icon: WhatsAppIcon },
-    { href: "https://www.instagram.com/mohitkansana8949?igsh=ZGdnYW5jN28zdGVr", label: "Instagram", icon: Instagram },
-    { href: "https://youtube.com/@learnx?si=hPvk5WvWvajNXTMS", label: "YouTube", icon: Youtube },
-    { href: "https://t.me/learnx", label: "Telegram", icon: Send },
-    { href: "https://www.facebook.com/share/1DGAHoMVGP/", label: "Facebook", icon: Facebook },
-  ];
-
-  const profileNavItem = { href: "/profile", label: "प्रोफ़ाइल", icon: User, tooltip: "Profile" };
-  
-  if (isUserLoading) {
-      return (
-          <Sidebar>
-            <SidebarHeader>
-                <Link href="/" className="flex items-center gap-2" prefetch={false}>
-                    <Image src="https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg" alt="Teach mania Logo" width={32} height={32} />
-                    <span className="text-xl font-bold whitespace-nowrap">Teach mania</span>
-                </Link>
-            </SidebarHeader>
-          </Sidebar>
-      )
+  const getInitials = (name: string | null | undefined) => {
+    if (!name) return 'TM';
+    const names = name.split(' ');
+    if (names.length > 1 && names[0] && names[names.length - 1]) {
+        return (names[0][0] + names[names.length - 1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
   }
 
   return (
     <Sidebar>
-      <SidebarHeader>
-        <Link href="/" className="flex items-center gap-2" prefetch={false}>
-           <Image src="https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg" alt="Teach mania Logo" width={32} height={32} />
-          <span className="text-xl font-bold whitespace-nowrap">Teach mania</span>
-        </Link>
+      <SidebarHeader className="p-0 border-0">
+         <div className="bg-[#090e23] p-4 flex items-center gap-3">
+             <Avatar className="h-14 w-14 border-2 border-white">
+                <AvatarImage src="https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg" alt="user avatar" />
+                <AvatarFallback>{getInitials(user?.displayName)}</AvatarFallback>
+             </Avatar>
+             <div className="text-white">
+                <p className="font-bold text-lg">{user?.displayName || "Teach mania"}</p>
+                <p className="text-sm">(Student)</p>
+             </div>
+         </div>
       </SidebarHeader>
-      <SidebarContent>
-        <SidebarMenu>
+      <SidebarContent className="p-0">
+        <SidebarMenu className="gap-0">
           {navItems.map((item) => (
-            <SidebarMenuItem key={item.href}>
+            <SidebarMenuItem key={item.href} className="px-2 py-1">
               <SidebarMenuButton
                 asChild
-                isActive={pathname.startsWith(item.href) && (item.href === '/' ? pathname === '/' : true)}
-                tooltip={{ children: item.tooltip }}
+                isActive={pathname === item.href}
                 onClick={handleLinkClick}
+                className="h-11 justify-start data-[active=true]:bg-primary/10 data-[active=true]:text-primary"
               >
                 <Link href={item.href}>
-                  <item.icon />
+                  <item.icon className={item.iconColor} />
                   <span>{item.label}</span>
                 </Link>
               </SidebarMenuButton>
@@ -169,52 +112,12 @@ export function AppSidebar() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-       <SidebarFooter>
-        <div className="p-2">
-          <Link href="/refer" onClick={handleLinkClick} className="block w-full p-3 text-center rounded-lg bg-yellow-400/20 text-yellow-600 dark:text-yellow-300 border border-yellow-500/50 hover:bg-yellow-400/30">
-            <div className="flex items-center justify-center gap-2">
-              <Gift className="h-5 w-5"/>
-              <span className="font-bold">Refer &amp; Earn</span>
-            </div>
-          </Link>
-        </div>
-        <Separator className="my-1" />
-         <div className="px-4 py-2">
-             <p className="text-xs font-semibold text-muted-foreground group-data-[collapsible=icon]:hidden">
-                Follow the 🔥Teach mania🚀STUDY 📖🎯
-             </p>
-         </div>
-         <SidebarMenu>
-             {socialLinks.map(link => (
-                <SidebarMenuItem key={link.label}>
-                    <SidebarMenuButton asChild tooltip={{children: link.label}} onClick={handleLinkClick}>
-                        <a href={link.href} target="_blank" rel="noopener noreferrer">
-                            <link.icon/>
-                            <span>{link.label}</span>
-                        </a>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-            ))}
-        </SidebarMenu>
-        <Separator className="my-1" />
+       <SidebarFooter className="p-0">
         <SidebarMenu>
-            <SidebarMenuItem>
-                <SidebarMenuButton
-                    asChild
-                    isActive={pathname === profileNavItem.href}
-                    tooltip={{ children: profileNavItem.tooltip }}
-                    onClick={handleLinkClick}
-                >
-                    <Link href={profileNavItem.href}>
-                    <profileNavItem.icon />
-                    <span>{profileNavItem.label}</span>
-                    </Link>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-                <SidebarMenuButton onClick={handleLogout} tooltip={{children: 'Logout'}}>
+            <SidebarMenuItem className="px-2 py-1">
+                <SidebarMenuButton onClick={handleLogout} className="h-11 justify-start">
                     <LogOut />
-                    <span>लॉगआउट</span>
+                    <span>Logout</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
         </SidebarMenu>
