@@ -50,9 +50,7 @@ const navSections = [
     {
         title: "Content Management",
         items: [
-            { href: '/admin/home-screen', label: 'Home Screen Icons', icon: Home },
             { href: '/admin/banners', label: 'Banners', icon: ImageIcon },
-            { href: '/admin/news', label: 'News Ticker', icon: Newspaper },
             { href: '/admin/courses', label: 'Courses', icon: BookOpen },
             { href: '/admin/content', label: 'Course Content', icon: Palette },
             { href: '/admin/ebooks', label: 'E-books', icon: Book },
@@ -65,21 +63,10 @@ const navSections = [
         ]
     },
     {
-        title: "E-Commerce",
-        items: [
-             { href: '/admin/book-orders', label: 'Book Orders', icon: Package },
-             { href: '/admin/books', label: 'Manage Books', icon: BookOpen },
-             { href: '/admin/coupons', label: 'Coupons', icon: TicketPercent },
-        ]
-    },
-    {
         title: "User Management",
         items: [
             { href: '/admin/users', label: 'All Users', icon: Users },
             { href: '/admin/enrollments', label: 'Enrollments', icon: CreditCard },
-            { href: '/admin/educators', label: 'Educators', icon: UserPlus },
-            { href: '/admin/toppers', label: 'Toppers', icon: Trophy },
-            { href: '/admin/results', label: 'Submitted Results', icon: UserCheck },
         ]
     },
     {
@@ -103,7 +90,6 @@ const navSections = [
             { href: '/admin/create-ebook', label: 'Create E-book', icon: PlusCircle },
             { href: '/admin/create-pyq', label: 'Create PYQ', icon: PlusCircle },
             { href: '/admin/create-test', label: 'Create Test', icon: PlusCircle },
-            { href: '/admin/create-book', label: 'Create Book', icon: PlusCircle },
             { href: '/admin/create-coupon', label: 'Create Coupon', icon: TicketPercent },
             { href: '/admin/live-lectures', label: 'Add Live Lecture', icon: Clapperboard },
         ]

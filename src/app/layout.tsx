@@ -1,4 +1,3 @@
-
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
@@ -39,7 +38,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#FFFFFF',
+  themeColor: '#090e23',
   minimumScale: 1,
   initialScale: 1,
   width: 'device-width',
@@ -62,7 +61,7 @@ export default function RootLayout({
       <body className="font-body antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="dark"
           enableSystem={false}
           disableTransitionOnChange
         >

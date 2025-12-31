@@ -1,8 +1,8 @@
 'use client';
-import { useUser, useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
+import { useUser } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import {
   BookOpen,
   GraduationCap,
@@ -20,70 +20,43 @@ import {
   FileText,
   Bell,
   Wand2,
+  Gift,
+  Newspaper,
+  User,
+  MessageCircle,
+  Share2,
 } from 'lucide-react';
 import Image from 'next/image';
-import { collection, doc, query, orderBy, limit } from 'firebase/firestore';
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
-import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel"
-import Autoplay from "embla-carousel-autoplay"
-import { CourseCard } from '@/components/cards/course-card';
-import { TeacherCard } from '@/components/cards/teacher-card';
-import { NewsTicker } from '@/components/layout/news-ticker';
-import { TopperCard } from '@/components/cards/topper-card';
-
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const footerItems = [
     { name: 'Home', href: '/', icon: Home },
-    { name: 'My Courses', href: '/my-library', icon: BookCopy },
-    { name: 'Downloads', href: '/downloads', icon: Download },
-    { name: 'Notice Board', href: '/notice-board', icon: ClipboardList },
+    { name: 'Library', href: '/my-library', icon: Library },
+    { name: 'Feed', href: '/feed', icon: MessageCircle },
+    { name: 'Refer', href: '/refer', icon: Share2 },
+    { name: 'Profile', href: '/profile', icon: User },
 ];
+
+const featureCardsConfig = [
+      { id: 'courses', title: 'कोर्सेस', href: '/courses', defaultIcon: GraduationCap, gradient: 'from-purple-500 to-indigo-600' },
+      { id: 'live_classes', title: 'Live Classes', href: '/live-lectures', defaultIcon: Clapperboard, gradient: 'from-orange-500 to-red-600' },
+      { id: 'ai_test', title: 'AI Test', href: '/ai-test', defaultIcon: Wand2, gradient: 'from-sky-500 to-cyan-600' },
+      { id: 'ebooks', title: 'E-books', href: '/ebooks', defaultIcon: Book, gradient: 'from-teal-500 to-green-600' },
+      { id: 'pyqs', title: 'PYQs', href: '/pyqs', defaultIcon: FileText, gradient: 'from-yellow-500 to-amber-600' },
+      { id: 'test_series', title: 'टेस्ट सीरीज', href: '/test-series', defaultIcon: ClipboardList, gradient: 'from-pink-500 to-rose-600' },
+      { id: 'current_affairs', title: 'Current Affairs', href: '/current-affairs', defaultIcon: Newspaper, gradient: 'from-cyan-500 to-blue-600' },
+      { id: 'free_courses', title: 'फ्री कोर्सेस', href: '/courses?filter=free', defaultIcon: Gift, gradient: 'from-red-500 to-orange-500' },
+      { id: 'youtube', title: 'YouTube', href: '/youtube', defaultIcon: Youtube, gradient: 'from-rose-600 to-red-700' },
+];
+
 
 export default function HomePage() {
   const { user, isUserLoading } = useUser();
-  const firestore = useFirestore();
   const router = useRouter();
-
-  const settingsRef = useMemoFirebase(() => (firestore ? doc(firestore, 'settings', 'homeScreen') : null), [firestore]);
-  const bannersQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'banners'), orderBy('createdAt', 'desc')) : null), [firestore]);
-  const coursesQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'courses'), orderBy('createdAt', 'desc'), limit(10)) : null), [firestore]);
-  const teamQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'team'), orderBy('createdAt', 'desc'), limit(10)) : null), [firestore]);
-  const servicesQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'services'), orderBy('order', 'asc')) : null), [firestore]);
-  const toppersQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'toppers'), orderBy('createdAt', 'desc'), limit(10)) : null), [firestore]);
-
-  const { data: homeSettings, isLoading: settingsLoading } = useDoc(settingsRef);
-  const { data: banners, isLoading: bannersLoading } = useCollection(bannersQuery);
-  const { data: courses, isLoading: coursesLoading } = useCollection(coursesQuery);
-  const { data: team, isLoading: teamLoading } = useCollection(teamQuery);
-  const { data: services, isLoading: servicesLoading } = useCollection(servicesQuery);
-  const { data: toppers, isLoading: toppersLoading } = useCollection(toppersQuery);
-
-  const featureCardsConfig = useMemo(() => [
-      { id: 'all_courses', title: 'All Courses', href: '/courses', defaultIcon: GraduationCap, iconColor: 'text-orange-500' },
-      { id: 'live_class', title: 'Live Class', href: '/live-lectures', defaultIcon: Clapperboard, iconColor: 'text-red-500' },
-      { id: 'notes', title: 'Notes', href: '/ebooks', defaultIcon: FileText, iconColor: 'text-blue-500' },
-      { id: 'my_paid_courses', title: 'My Paid Courses', href: '/my-library', defaultIcon: Book, iconColor: 'text-purple-500' },
-      { id: 'social_links', title: 'Social Links', href: '/social-links', defaultIcon: Users, iconColor: 'text-sky-500' },
-      { id: 'test', title: 'Test', href: '/test-series', defaultIcon: ClipboardList, iconColor: 'text-indigo-500' },
-      { id: 'free_videos', title: 'Free Videos', href: '/youtube', defaultIcon: Youtube, iconColor: 'text-red-600' },
-      { id: 'free_test', title: 'Free Test', href: '/test-series?filter=free', defaultIcon: ClipboardList, iconColor: 'text-green-500' },
-      { id: 'free_notes', title: 'Free Notes', href: '/ebooks?filter=free', defaultIcon: Library, iconColor: 'text-yellow-500' },
-    ], []);
-  
-  const featureCards = useMemo(() => {
-    return featureCardsConfig.map(card => ({
-      ...card,
-      iconUrl: homeSettings?.featureIcons?.[card.id]
-    }));
-  }, [featureCardsConfig, homeSettings]);
-
+  const {pathname} = useRouter();
 
   if (isUserLoading) {
     return (
@@ -98,148 +71,56 @@ export default function HomePage() {
   }
 
   return (
-    <div className="bg-background min-h-screen">
-      <header className="bg-background p-3 flex justify-between items-center shadow-sm sticky top-0 z-40">
-        <SidebarTrigger />
-        <div className="flex-1 flex justify-center">
-             <Button variant="outline" className="h-10 border-gray-300">
-                <p className="text-sm font-semibold">Class - 9 | Bihar Board</p>
-                <ChevronDown className="ml-2 h-4 w-4" />
-             </Button>
+    <div className="bg-[#090e23] min-h-screen text-white">
+       <header className="bg-[#090e23] p-3 flex justify-between items-center sticky top-0 z-40">
+        <div className="flex-1">
+          <h1 className="text-2xl font-bold">Welcome to Teach Mania</h1>
+          <p className="text-sm text-gray-400">The quickest way to study.</p>
         </div>
         <Button variant="ghost" size="icon">
           <Bell />
         </Button>
+        <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center font-bold text-sm">
+          AS
+        </div>
       </header>
 
-      <NewsTicker />
-
       <div className="p-4 space-y-6 pb-24 md:pb-8">
-        {!bannersLoading && banners && banners.length > 0 && (
-          <Carousel 
-             plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
-             opts={{ loop: true }}
-             className="w-full"
-          >
-            <CarouselContent>
-              {banners.map((banner: any) => (
-                <CarouselItem key={banner.id}>
-                  <div className="aspect-[16/8] relative">
-                    <Image src={banner.imageUrl} alt={banner.alt || 'Promotional Banner'} fill className="rounded-lg object-cover" />
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
-        )}
+        
+        <Card onClick={() => router.push('/ai-trick-generator')} className="cursor-pointer bg-gradient-to-r from-orange-500/10 via-black to-black border-orange-500/50 p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Wand2 className="h-6 w-6 text-orange-400" />
+              <h3 className="font-semibold text-lg">Quickly Study Trick Generator</h3>
+            </div>
+        </Card>
+
 
         <div className="grid grid-cols-3 gap-3">
-          {featureCards.map((card, index) => {
+          {featureCardsConfig.map((card, index) => {
              const Icon = card.defaultIcon;
              return (
-              <Card key={index} onClick={() => handleCardClick(card.href)} className="flex flex-col items-center justify-center p-3 text-center aspect-square transition-transform hover:shadow-md cursor-pointer">
-                <div className={cn("p-3 bg-muted rounded-full mb-2", card.iconColor)}>
-                  {settingsLoading ? <Loader className="h-6 w-6 animate-spin"/> : card.iconUrl ? (
-                    <Image src={card.iconUrl} alt={card.title} width={24} height={24} className="h-6 w-6"/>
-                  ) : (
-                    <Icon className="h-6 w-6 text-white" strokeWidth={1.5} />
-                  )}
-                </div>
+              <Card key={index} onClick={() => handleCardClick(card.href)} className={cn("flex flex-col items-center justify-center p-3 text-center aspect-square transition-transform hover:shadow-md cursor-pointer bg-gradient-to-br", card.gradient)}>
+                <Icon className="h-8 w-8 mb-2" strokeWidth={1.5} />
                 <span className="font-semibold text-xs md:text-sm leading-tight">{card.title}</span>
               </Card>
             )}
           )}
         </div>
         
-         {!servicesLoading && services && services.length > 0 && (
-            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-4 text-white">
-                <h2 className="text-xl font-bold">Our Services</h2>
-                <p className="text-sm opacity-90 mb-4">Admin Panel से जोड़ी गई सभी Services</p>
-                 <div className="space-y-4">
-                    {services.map((service: any) => (
-                        <Card key={service.id} className="bg-white/10 border-white/20 text-white">
-                            <CardContent className="p-4">
-                                <div className="flex gap-4 items-center">
-                                    <Image src={service.iconUrl} alt={service.name} width={40} height={40} className="rounded-md" />
-                                    <div>
-                                        <h3 className="font-bold">{service.name}</h3>
-                                        <p className="text-xs opacity-80 line-clamp-2">{service.description}</p>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 gap-2 mt-4">
-                                    <Button variant="secondary" size="sm">{service.leftButtonText || 'Other App'}</Button>
-                                    <Button size="sm" className="bg-yellow-400 text-black hover:bg-yellow-500">{service.rightButtonText || 'Our App'}</Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
-                 </div>
-                 <p className="text-xs text-center mt-4 opacity-80">यहां Admin Panel से जोड़ी गई वे सभी सुविधाएं दिखाई जाएंगी जो Teach Mania को अन्य ऐप्स से बेहतर बनाती हैं।</p>
+        <Card onClick={() => router.push('/ai-doubt-solver')} className="cursor-pointer bg-gradient-to-r from-purple-500/10 via-black to-black border-purple-500/50 p-4 flex flex-col items-center">
+            <div className="flex items-center gap-3">
+              <Wand2 className="h-6 w-6 text-purple-400" />
+              <h3 className="font-semibold text-lg">Quickly Study Doubt Solver</h3>
             </div>
-        )}
-
-        <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl p-4 text-white cursor-pointer" onClick={() => router.push('/ai-doubt-solver')}>
-            <h2 className="text-xl font-bold">AI Doubt</h2>
-            <p className="text-sm opacity-90 mb-2">24x7 अपने डाउट सॉल्व करें।</p>
-            <Button variant="secondary" className="w-full" size="sm">
-                <Wand2 className="mr-2 h-4 w-4" />
-                Ask a Doubt
-            </Button>
-        </div>
-
-
-        {!coursesLoading && courses && courses.length > 0 && (
-          <div>
-              <h2 className="text-xl font-bold mb-3">Available Courses</h2>
-              <Carousel opts={{ align: "start", loop: false }}>
-                  <CarouselContent className="-ml-3">
-                      {courses.map(course => (
-                          <CarouselItem key={course.id} className="pl-3 basis-4/5 sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
-                               <CourseCard course={course} />
-                          </CarouselItem>
-                      ))}
-                  </CarouselContent>
-              </Carousel>
-          </div>
-        )}
-
-        {!teamLoading && team && team.length > 0 && (
-          <div>
-              <h2 className="text-xl font-bold mb-3">Our Team – Teach Mania</h2>
-               <Carousel opts={{ align: "start", loop: false }}>
-                  <CarouselContent className="-ml-3">
-                      {team.map(member => (
-                          <CarouselItem key={member.id} className="pl-3 basis-3/5 sm:basis-2/5 md:basis-1/3">
-                               <TeacherCard teacher={member} />
-                          </CarouselItem>
-                      ))}
-                  </CarouselContent>
-              </Carousel>
-          </div>
-        )}
-        
-        {!toppersLoading && toppers && toppers.length > 0 && (
-          <div>
-              <h2 className="text-xl font-bold mb-3">TARGET BOARD के TOPPERS</h2>
-               <Carousel opts={{ align: "start", loop: false }}>
-                  <CarouselContent className="-ml-3">
-                      {toppers.map(topper => (
-                          <CarouselItem key={topper.id} className="pl-3 basis-2/5 sm:basis-1/3 md:basis-1/4">
-                               <TopperCard topper={topper} />
-                          </CarouselItem>
-                      ))}
-                  </CarouselContent>
-              </Carousel>
-          </div>
-        )}
-
+            <Button className="mt-3 w-full bg-gray-800 text-white hover:bg-gray-700">Ask a Doubt</Button>
+        </Card>
       </div>
 
-      <footer className="fixed bottom-0 left-0 right-0 bg-[#090e23] p-1 flex justify-around md:hidden z-40">
+       <footer className="fixed bottom-0 left-0 right-0 bg-[#040815] p-1 flex justify-around md:hidden z-40">
         {footerItems.map(item => {
-            const isActive = router.pathname === item.href;
+            const isActive = pathname === item.href;
             return (
-                <Link href={item.href} key={item.name} className={cn("flex flex-col items-center text-xs w-1/4 text-center py-1 rounded-md", isActive ? "text-white" : "text-gray-400")}>
+                <Link href={item.href} key={item.name} className={cn("flex flex-col items-center text-xs w-1/5 text-center py-1 rounded-md", isActive ? "text-white" : "text-gray-400")}>
                     <item.icon className="h-5 w-5 mb-0.5"/> 
                     <span className="text-[10px] font-medium">{item.name}</span>
                 </Link>
