@@ -25,9 +25,11 @@ import {
   User,
   MessageCircle,
   Share2,
+  Tv,
+  LifeBuoy,
 } from 'lucide-react';
 import Image from 'next/image';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -59,33 +61,23 @@ const featureCardsConfig = [
 export default function HomePage() {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
-  const { pathname } = router;
+  const pathname = router.pathname;
   const { firestore } = useFirebase();
 
-  const [homeIcons, setHomeIcons] = useState<Record<string, string>>({});
   const [banners, setBanners] = useState<any[]>([]);
   const [isLoadingContent, setIsLoadingContent] = useState(true);
 
-  const homeSettingsQuery = useMemoFirebase(() => (firestore ? collection(firestore, 'settings') : null), [firestore]);
   const bannersQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'banners'), orderBy('createdAt', 'desc')) : null), [firestore]);
-
-  const { data: settingsDocs, isLoading: settingsLoading } = useCollection(homeSettingsQuery);
   const { data: bannersData, isLoading: bannersLoading } = useCollection(bannersQuery);
 
-  useMemo(() => {
-    if (settingsDocs) {
-      const homeScreenSettings = settingsDocs.find(d => d.id === 'homeScreen');
-      if (homeScreenSettings) {
-        setHomeIcons(homeScreenSettings.featureIcons || {});
-      }
-    }
+  useEffect(() => {
     if (bannersData) {
         setBanners(bannersData);
     }
-    if (!settingsLoading && !bannersLoading) {
+    if (!bannersLoading) {
       setIsLoadingContent(false);
     }
-  }, [settingsDocs, bannersData, settingsLoading, bannersLoading]);
+  }, [bannersData, bannersLoading]);
 
 
   if (isUserLoading || isLoadingContent) {
@@ -101,8 +93,8 @@ export default function HomePage() {
   }
 
   return (
-    <div className="bg-[#090e23] min-h-screen text-white">
-       <header className="bg-[#090e23] p-3 flex justify-between items-center sticky top-0 z-40">
+    <div className="bg-white dark:bg-[#090e23] min-h-screen text-black dark:text-white">
+       <header className="bg-white dark:bg-[#090e23] p-3 flex justify-between items-center sticky top-0 z-40">
         <SidebarTrigger />
         <Link href="/">
             <Image src="https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg" alt="Teach Mania Logo" width={40} height={40} className="rounded-full" />
@@ -116,10 +108,10 @@ export default function HomePage() {
 
       <div className="p-4 space-y-6 pb-24 md:pb-8">
         
-        <Card onClick={() => router.push('/ai-trick-generator')} className="cursor-pointer bg-gradient-to-r from-orange-500/10 via-black to-black border-orange-500/50 p-4 flex items-center justify-between">
+        <Card onClick={() => router.push('/ai-trick-generator')} className="cursor-pointer bg-gradient-to-r from-orange-500/10 via-background to-background border-orange-500/50 p-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Wand2 className="h-6 w-6 text-orange-400" />
-              <h3 className="font-semibold text-lg">Quickly Study Trick Generator</h3>
+              <Wand2 className="h-5 w-5 text-orange-400" />
+              <h3 className="font-semibold text-base">Teach Mania Trick Generator</h3>
             </div>
         </Card>
         
@@ -143,25 +135,20 @@ export default function HomePage() {
         <div className="grid grid-cols-3 gap-4">
           {featureCardsConfig.map((card, index) => {
              const Icon = card.defaultIcon;
-             const customIconUrl = homeIcons[card.id];
              return (
               <Card key={index} onClick={() => handleCardClick(card.href)} className={cn("flex flex-col items-center justify-center p-3 text-center aspect-square transition-transform hover:shadow-md cursor-pointer bg-gradient-to-br", card.gradient)}>
-                 {customIconUrl ? 
-                    <Image src={customIconUrl} alt={card.title} width={48} height={48} className="h-12 w-12 object-contain mb-1" /> : 
-                    <Icon className="h-12 w-12 mb-1" strokeWidth={1.5} />
-                 }
-                <span className="font-semibold text-xs md:text-sm leading-tight">{card.title}</span>
+                  <Icon className="h-10 w-10 mb-1 text-white" strokeWidth={1.5} />
+                <span className="font-semibold text-xs md:text-sm leading-tight text-white">{card.title}</span>
               </Card>
             )}
           )}
         </div>
         
-        <Card onClick={() => router.push('/ai-doubt-solver')} className="cursor-pointer bg-gradient-to-r from-purple-500/10 via-black to-black border-purple-500/50 p-4 flex flex-col items-center">
+        <Card onClick={() => router.push('/ai-doubt-solver')} className="cursor-pointer bg-gradient-to-r from-purple-500/10 via-background to-background border-purple-500/50 p-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Wand2 className="h-6 w-6 text-purple-400" />
-              <h3 className="font-semibold text-lg">Quickly Study Doubt Solver</h3>
+              <Wand2 className="h-5 w-5 text-purple-400" />
+              <h3 className="font-semibold text-base">Teach Mania Doubt Solver</h3>
             </div>
-            <Button className="mt-3 w-full bg-gray-800 text-white hover:bg-gray-700">Ask a Doubt</Button>
         </Card>
       </div>
 
