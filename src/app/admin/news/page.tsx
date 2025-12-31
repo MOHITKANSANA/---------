@@ -1,4 +1,3 @@
-
 'use client';
 import { useState } from 'react';
 import { useCollection, useMemoFirebase, useFirebase } from '@/firebase';
@@ -113,7 +112,7 @@ export default function AdminNewsPage() {
                         <CardContent className="p-3 flex items-center justify-between gap-4">
                              <div className="flex-1">
                                 <p className="font-medium">{item.text}</p>
-                                <p className="text-xs text-muted-foreground">{format(item.createdAt.toDate(), 'dd MMM yyyy, HH:mm')}</p>
+                                {item.createdAt?.toDate && <p className="text-xs text-muted-foreground">{format(item.createdAt.toDate(), 'dd MMM yyyy, HH:mm')}</p>}
                              </div>
                              <AlertDialog>
                                 <AlertDialogTrigger asChild>

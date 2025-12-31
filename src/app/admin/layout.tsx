@@ -1,4 +1,3 @@
-
 'use client';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -146,8 +145,8 @@ export default function AdminLayout({
         <aside className="hidden w-72 flex-col border-r bg-white/80 backdrop-blur-sm dark:bg-gray-950/80 sm:flex fixed h-full">
             <div className="border-b p-4 flex items-center gap-3 bg-white/50 dark:bg-gray-950/50">
                  <Link href="/" className="flex items-center gap-2 font-semibold">
-                    <Image src="https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg" alt="Teach mania Logo" width={32} height={32} />
-                    <span className="text-lg text-blue-800 dark:text-blue-300">Teach mania <span className="font-light text-orange-500">Admin</span></span>
+                    <Image src="https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg" alt="Teach Mania Logo" width={32} height={32} />
+                    <span className="text-lg text-blue-800 dark:text-blue-300">Teach Mania <span className="font-light text-orange-500">Admin</span></span>
                 </Link>
             </div>
             <div className="flex-1 overflow-auto py-2">

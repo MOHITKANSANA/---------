@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -30,10 +29,13 @@ type NavItem = {
 const navItems: NavItem[] = [
     { href: "/", label: "Home", icon: Home },
     { href: "/profile", label: "Profile", icon: User },
+    { href: "/courses", label: "All Courses", icon: GraduationCap },
     { href: "/my-library", label: "My Courses", icon: BookCopy },
-    { href: "/live-lectures", label: "Live Classes", icon: Radio },
     { href: "/downloads", label: "Downloads", icon: Download },
     { href: "/test-series", label: "MCQ", icon: ClipboardList },
+    { href: "/our-team", label: "Our Team", icon: Users },
+    { href: "/about-us", label: "About Us", icon: Info },
+    { href: "/privacy-policy", label: "Privacy Policy", icon: Shield },
     { href: "/refer", label: "Share App", icon: Share2 },
 ];
 

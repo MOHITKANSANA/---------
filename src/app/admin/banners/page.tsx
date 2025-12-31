@@ -1,4 +1,3 @@
-
 'use client';
 import { useState } from 'react';
 import { useCollection, useMemoFirebase, useFirebase } from '@/firebase';
@@ -30,7 +29,6 @@ import {
 const bannerSchema = z.object({
     imageUrl: z.string().url('A valid image URL is required').min(1, 'Image URL is required'),
     alt: z.string().min(1, 'Alt text is required'),
-    link: z.string().url('A valid URL is required').optional().or(z.literal('')),
 });
 type BannerFormValues = z.infer<typeof bannerSchema>;
 
@@ -43,7 +41,7 @@ export default function AdminBannersPage() {
     const bannersQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'banners'), orderBy('createdAt', 'desc')) : null), [firestore]);
     const { data: banners, isLoading: bannersLoading } = useCollection(bannersQuery);
 
-    const bannerForm = useForm<BannerFormValues>({ resolver: zodResolver(bannerSchema), defaultValues: { imageUrl: '', alt: '', link: '' } });
+    const bannerForm = useForm<BannerFormValues>({ resolver: zodResolver(bannerSchema), defaultValues: { imageUrl: '', alt: '' } });
     
     const imageUrlValue = bannerForm.watch('imageUrl');
 
@@ -54,6 +52,7 @@ export default function AdminBannersPage() {
       const docRef = doc(collection(firestore, 'banners'));
       const bannerData = { 
           ...values, 
+          link: '', // Set link to empty string as it's no longer in the form
           createdAt: serverTimestamp() 
       };
 
@@ -105,8 +104,7 @@ export default function AdminBannersPage() {
                             <FormField control={bannerForm.control} name="imageUrl" render={({ field }) => (<FormItem><FormLabel>Image URL</FormLabel><FormControl><Input placeholder="https://example.com/banner.jpg" {...field} /></FormControl>
                             {imageUrlValue && <Image src={imageUrlValue} alt="Banner Preview" width={200} height={100} className="mt-2 rounded-md object-contain mx-auto" />}
                             <FormMessage /></FormItem>)}/>
-                            <FormField control={bannerForm.control} name="alt" render={({ field }) => (<FormItem><FormLabel>Alt Text</FormLabel><FormControl><Input placeholder="Description of the banner" {...field} /></FormControl><FormMessage /></FormItem>)}/>
-                            <FormField control={bannerForm.control} name="link" render={({ field }) => (<FormItem><FormLabel>Link URL (Optional)</FormLabel><FormControl><Input placeholder="https://app.com/target-page" {...field} /></FormControl><FormMessage /></FormItem>)}/>
+                            <FormField control={bannerForm.control} name="alt" render={({ field }) => (<FormItem><FormLabel>Alt Text (Image Description)</FormLabel><FormControl><Input placeholder="Description of the banner" {...field} /></FormControl><FormMessage /></FormItem>)}/>
                             <Button type="submit" disabled={isSubmitting} className="w-full">{isSubmitting ? <><Loader className="mr-2 h-4 w-4 animate-spin" /> Adding...</> : 'Add Banner'}</Button>
                         </form>
                         </Form>

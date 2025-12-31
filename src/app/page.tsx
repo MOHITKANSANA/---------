@@ -1,4 +1,3 @@
-
 'use client';
 import { useUser, useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
 import { Button } from '@/components/ui/button';
@@ -20,6 +19,7 @@ import {
   Book,
   FileText,
   Bell,
+  Wand2,
 } from 'lucide-react';
 import Image from 'next/image';
 import { collection, doc, query, orderBy, limit } from 'firebase/firestore';
@@ -36,6 +36,7 @@ import Autoplay from "embla-carousel-autoplay"
 import { CourseCard } from '@/components/cards/course-card';
 import { TeacherCard } from '@/components/cards/teacher-card';
 import { NewsTicker } from '@/components/layout/news-ticker';
+import { TopperCard } from '@/components/cards/topper-card';
 
 
 const footerItems = [
@@ -53,14 +54,16 @@ export default function HomePage() {
   const settingsRef = useMemoFirebase(() => (firestore ? doc(firestore, 'settings', 'homeScreen') : null), [firestore]);
   const bannersQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'banners'), orderBy('createdAt', 'desc')) : null), [firestore]);
   const coursesQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'courses'), orderBy('createdAt', 'desc'), limit(10)) : null), [firestore]);
-  const teamQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'team'), limit(10)) : null), [firestore]);
+  const teamQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'team'), orderBy('createdAt', 'desc'), limit(10)) : null), [firestore]);
   const servicesQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'services'), orderBy('order', 'asc')) : null), [firestore]);
+  const toppersQuery = useMemoFirebase(() => (firestore ? query(collection(firestore, 'toppers'), orderBy('createdAt', 'desc'), limit(10)) : null), [firestore]);
 
   const { data: homeSettings, isLoading: settingsLoading } = useDoc(settingsRef);
   const { data: banners, isLoading: bannersLoading } = useCollection(bannersQuery);
   const { data: courses, isLoading: coursesLoading } = useCollection(coursesQuery);
   const { data: team, isLoading: teamLoading } = useCollection(teamQuery);
   const { data: services, isLoading: servicesLoading } = useCollection(servicesQuery);
+  const { data: toppers, isLoading: toppersLoading } = useCollection(toppersQuery);
 
   const featureCardsConfig = useMemo(() => [
       { id: 'all_courses', title: 'All Courses', href: '/courses', defaultIcon: GraduationCap, iconColor: 'text-orange-500' },
@@ -121,7 +124,7 @@ export default function HomePage() {
             <CarouselContent>
               {banners.map((banner: any) => (
                 <CarouselItem key={banner.id}>
-                  <div className="aspect-[16/7] relative">
+                  <div className="aspect-[16/8] relative">
                     <Image src={banner.imageUrl} alt={banner.alt || 'Promotional Banner'} fill className="rounded-lg object-cover" />
                   </div>
                 </CarouselItem>
@@ -136,7 +139,7 @@ export default function HomePage() {
              return (
               <Card key={index} onClick={() => handleCardClick(card.href)} className="flex flex-col items-center justify-center p-3 text-center aspect-square transition-transform hover:shadow-md cursor-pointer">
                 <div className={cn("p-3 bg-muted rounded-full mb-2", card.iconColor)}>
-                  {card.iconUrl ? (
+                  {settingsLoading ? <Loader className="h-6 w-6 animate-spin"/> : card.iconUrl ? (
                     <Image src={card.iconUrl} alt={card.title} width={24} height={24} className="h-6 w-6"/>
                   ) : (
                     <Icon className="h-6 w-6 text-white" strokeWidth={1.5} />
@@ -148,7 +151,7 @@ export default function HomePage() {
           )}
         </div>
         
-        {!servicesLoading && services && services.length > 0 && (
+         {!servicesLoading && services && services.length > 0 && (
             <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-4 text-white">
                 <h2 className="text-xl font-bold">Our Services</h2>
                 <p className="text-sm opacity-90 mb-4">Admin Panel से जोड़ी गई सभी Services</p>
@@ -174,6 +177,16 @@ export default function HomePage() {
                  <p className="text-xs text-center mt-4 opacity-80">यहां Admin Panel से जोड़ी गई वे सभी सुविधाएं दिखाई जाएंगी जो Teach Mania को अन्य ऐप्स से बेहतर बनाती हैं।</p>
             </div>
         )}
+
+        <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl p-4 text-white cursor-pointer" onClick={() => router.push('/ai-doubt-solver')}>
+            <h2 className="text-xl font-bold">AI Doubt</h2>
+            <p className="text-sm opacity-90 mb-2">24x7 अपने डाउट सॉल्व करें।</p>
+            <Button variant="secondary" className="w-full" size="sm">
+                <Wand2 className="mr-2 h-4 w-4" />
+                Ask a Doubt
+            </Button>
+        </div>
+
 
         {!coursesLoading && courses && courses.length > 0 && (
           <div>
@@ -204,16 +217,30 @@ export default function HomePage() {
               </Carousel>
           </div>
         )}
+        
+        {!toppersLoading && toppers && toppers.length > 0 && (
+          <div>
+              <h2 className="text-xl font-bold mb-3">TARGET BOARD के TOPPERS</h2>
+               <Carousel opts={{ align: "start", loop: false }}>
+                  <CarouselContent className="-ml-3">
+                      {toppers.map(topper => (
+                          <CarouselItem key={topper.id} className="pl-3 basis-2/5 sm:basis-1/3 md:basis-1/4">
+                               <TopperCard topper={topper} />
+                          </CarouselItem>
+                      ))}
+                  </CarouselContent>
+              </Carousel>
+          </div>
+        )}
 
       </div>
 
       <footer className="fixed bottom-0 left-0 right-0 bg-[#090e23] p-1 flex justify-around md:hidden z-40">
         {footerItems.map(item => {
-            const Icon = item.icon;
             const isActive = router.pathname === item.href;
             return (
                 <Link href={item.href} key={item.name} className={cn("flex flex-col items-center text-xs w-1/4 text-center py-1 rounded-md", isActive ? "text-white" : "text-gray-400")}>
-                    <Icon className="h-5 w-5 mb-0.5"/> 
+                    <item.icon className="h-5 w-5 mb-0.5"/> 
                     <span className="text-[10px] font-medium">{item.name}</span>
                 </Link>
             )
