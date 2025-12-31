@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: 'https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg',
-    apple: 'https://i.supaimg.com/292dd0b1-b4e8-4bd9-b83e-2f416d3df54b.jpg',
+    icon: 'https://i.supaimg.com/6a3d0ff2-fa61-4db0-a5a0-f2c92136a69b.jpg',
+    apple: 'https://i.supaimg.com/6a3d0ff2-fa61-4db0-a5a0-f2c92136a69b.jpg',
   },
   other: {
     "google-site-verification": "tpxyguMPSOqv1W6Aj42I4lhHQB-Ky5tA2SjqoP66LtI"

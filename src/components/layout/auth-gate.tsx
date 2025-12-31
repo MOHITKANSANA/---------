@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useUser, useFirestore } from '@/firebase';
@@ -15,6 +16,7 @@ const FULL_SCREEN_PATHS = ['/courses/watch/', '/live-lectures', '/pdf-viewer', '
 const PROFILE_COMPLETE_PATH = '/complete-profile';
 
 const shouldShowLayout = (pathname: string) => {
+    if (pathname === '/') return false;
     if (NO_LAYOUT_PATHS.includes(pathname)) return false;
     // Check with startsWith for dynamic paths
     if (FULL_SCREEN_PATHS.some(p => pathname.startsWith(p))) return false;
