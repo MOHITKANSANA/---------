@@ -62,7 +62,6 @@ const featureCardsConfig = [
 export default function HomePage() {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
-  const pathname = router.pathname;
   const { firestore } = useFirebase();
 
   const [banners, setBanners] = useState<any[]>([]);
@@ -116,7 +115,7 @@ export default function HomePage() {
               <CarouselContent>
                 {banners.map(banner => (
                     <CarouselItem key={banner.id}>
-                        <div className="w-full aspect-video relative rounded-lg overflow-hidden">
+                        <div className="w-full aspect-[16/7] relative rounded-lg overflow-hidden">
                            <Image src={banner.imageUrl} alt={banner.alt} fill className="object-cover" />
                         </div>
                     </CarouselItem>
@@ -125,10 +124,10 @@ export default function HomePage() {
             </Carousel>
         )}
         
-        <Card onClick={() => router.push('/ai-trick-generator')} className="cursor-pointer bg-gradient-to-r from-orange-500/10 via-background to-background border-orange-500/50 p-3 flex items-center justify-between">
+        <Card onClick={() => router.push('/ai-trick-generator')} className="cursor-pointer bg-gradient-to-r from-orange-500 to-amber-500 border-orange-500/50 p-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Wand2 className="h-5 w-5 text-orange-400" />
-              <h3 className="font-semibold text-base">Teach Mania Trick Generator</h3>
+              <Wand2 className="h-5 w-5 text-white" />
+              <h3 className="font-semibold text-base text-white">Teach Mania Trick Generator</h3>
             </div>
         </Card>
 
@@ -145,17 +144,17 @@ export default function HomePage() {
           )}
         </div>
         
-        <Card onClick={() => router.push('/ai-doubt-solver')} className="cursor-pointer bg-gradient-to-r from-purple-500/10 via-background to-background border-purple-500/50 p-3 flex items-center justify-between">
+        <Card onClick={() => router.push('/ai-doubt-solver')} className="cursor-pointer bg-gradient-to-r from-purple-500 to-indigo-500 border-purple-500/50 p-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Wand2 className="h-5 w-5 text-purple-400" />
-              <h3 className="font-semibold text-base">Teach Mania Doubt Solver</h3>
+              <Wand2 className="h-5 w-5 text-white" />
+              <h3 className="font-semibold text-base text-white">Teach Mania Doubt Solver</h3>
             </div>
         </Card>
       </div>
 
        <footer className="fixed bottom-0 left-0 right-0 bg-[#040815] p-1 flex justify-around md:hidden z-40">
         {footerItems.map(item => {
-            const isActive = pathname === item.href;
+            const isActive = false; // pathname can't be used here directly, placeholder
             return (
                 <Link href={item.href} key={item.name} className={cn("flex flex-col items-center text-xs w-1/5 text-center py-1 rounded-md", isActive ? "text-white" : "text-gray-400")}>
                     <item.icon className="h-5 w-5 mb-0.5"/> 
